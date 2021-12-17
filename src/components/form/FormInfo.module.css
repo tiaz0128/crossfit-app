@@ -86,6 +86,14 @@ section::after{
     color: #fff;
 }
 
+.inputBox select{
+    height: 100%; 
+    border: 2px solid #fff;
+    pointer-events: auto;
+    outline: none;
+    color: #302d33;
+}
+
 .inputBox input,
 .inputBox textarea{
     position: absolute;
@@ -113,6 +121,13 @@ section::after{
     pointer-events: none;
 }
 
+
+.inputBox .select{ 
+    top: -35px !important;
+    left: -10px !important;
+}
+ 
+
 .inputBox input:focus + .text,
 .inputBox input:valid + .text,
 .inputBox textarea:focus + .text,
@@ -137,6 +152,10 @@ section::after{
 .inputBox input:valid ~ .line
 {
     height: 100%;
+}
+
+ .file{ 
+    pointer-events: auto !important;
 }
 
 .textarea {
