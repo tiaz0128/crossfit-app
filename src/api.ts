@@ -22,5 +22,5 @@ export const addPost = async ({
 
 export const getPost = async () => {
   const response = await api.get('/comments');
-  return response;
+  return response.data;
 };
