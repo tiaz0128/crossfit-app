@@ -1,12 +1,12 @@
 import React from 'react';
 import './App.css';
-import Membership from './components/membership/Membership';
-import WodInfo from './components/form/FormInfo';
+// import Membership from './components/membership/Membership';
+import WodInfo from './components/form/FormList';
 
 function App() {
   return (
     <div className="App">
-      <Membership />
+      {/* <Membership /> */}
       <WodInfo />
     </div>
   );

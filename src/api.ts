@@ -19,3 +19,8 @@ export const addPost = async ({
 }) => {
   await api.post('/comments', { wodType, joinDate, title, content, file });
 };
+
+export const getPost = async () => {
+  const response = await api.get('/comments');
+  return response;
+};

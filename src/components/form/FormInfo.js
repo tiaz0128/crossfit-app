@@ -13,8 +13,6 @@ function FormInfo() {
   const [content, setContent] = useState('');
   const [file, setFile] = useState('');
 
-  // const [validated, setValidated] = useState(false);
-
   const handleWodTypeChange = ({ target: { value } }) => {
     setWodType(value);
   };
@@ -46,7 +44,6 @@ function FormInfo() {
       setFile('');
     }
     addPost({ wodType, joinDate, title, content, file });
-    // setValidated(true);
   };
 
   return (
