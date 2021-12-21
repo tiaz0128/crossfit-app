@@ -1,0 +1,27 @@
+.membershipbox {
+  position: relative;
+  z-index: 1;
+}
+
+.membershipbox::after {
+  background: url(../../asset/img/logo.jpg);
+  top: 0;
+  left: 0;
+  position: fixed; 
+  background-size: 100%;
+  opacity: 0.05 !important;
+  z-index: -1;
+  content: "";
+  background-position: center;
+  background-size: contain;
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+}
+
+.dateRage {
+  display: flex;
+  margin: 0 auto;
+  align-items: center;
+  margin-bottom: 5em;
+}
