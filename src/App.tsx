@@ -1,13 +1,11 @@
 import React from 'react';
 import './App.css';
-// import Membership from './components/membership/Membership';
-import WodInfo from './components/form/FormList';
+import Home from './components/Home';
 
 function App() {
   return (
     <div className="App">
-      {/* <Membership /> */}
-      <WodInfo />
+      <Home />
     </div>
   );
 }

@@ -6,18 +6,18 @@ const api = axios.create({
 
 export const addPost = async ({
   wodType,
-  joinDate,
+  upDate,
   title,
   content,
   file,
 }: {
   wodType: string;
-  joinDate: string;
+  upDate: string;
   title: string;
   content: string;
   file: string;
 }) => {
-  await api.post('/comments', { wodType, joinDate, title, content, file });
+  await api.post('/comments', { wodType, upDate, title, content, file });
 };
 
 export const getPost = async () => {

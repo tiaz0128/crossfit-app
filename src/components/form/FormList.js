@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Table } from 'react-bootstrap';
+import { Table, Modal } from 'react-bootstrap';
 import { getPost } from '../../api';
+import FormInfo from './FormInfo';
 
 function FormList() {
   const [keys, setKeys] = useState([]);
   const [wods, setWods] = useState([]);
-
-  // const getData = async () => {
-  //   const data = await getPost();
-  //   return data;
-  // };
+  const [show, setShow] = useState(false);
 
   useEffect(async () => {
     const wodList = await getPost();
@@ -17,24 +14,44 @@ function FormList() {
     setKeys(Object.keys(wodList[0]));
   }, []);
 
-  return (
-    <Table striped bordered hover>
-      <thead>
-        <tr>
-          {keys.map((title, index) => (
-            <th key={index}>{title}</th>
-          ))}
-        </tr>
-      </thead>
+  const handleModal = () => {
+    setShow(true);
+  };
 
-      <tbody>
-        {wods.map(wod => (
-          <tr key={wod.id} >
-            {keys.map((key, index) => <td key={index}>{wod[key]}</td>)}
+  return (
+    <>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            {keys.map((title, index) => (
+              <th key={index}>{title}</th>
+            ))}
           </tr>
-        ))}
-      </tbody>
-    </Table>
+        </thead>
+
+        <tbody>
+          {wods.map((wod) => (
+            <tr key={wod.id} onClick={handleModal}>
+              {keys.map((key, index) => (
+                <td key={index}>{wod[key]}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+
+      <Modal
+        show={show}
+        onHide={() => setShow(false)}
+        dialogClassName="modal-90w"
+        aria-labelledby="example-custom-modal-styling-title"
+      >
+        <Modal.Header closeButton></Modal.Header>
+        <Modal.Body>
+          <FormInfo />
+        </Modal.Body>
+      </Modal>
+    </>
   );
 }
 

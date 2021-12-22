@@ -8,7 +8,7 @@ function FormInfo() {
   const today = moment().format('YYYY-MM-DD');
 
   const [wodType, setWodType] = useState('Daily WOD');
-  const [joinDate, setJoinDate] = useState(today);
+  const [upDate, setUpDate] = useState(today);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [file, setFile] = useState('');
@@ -17,8 +17,8 @@ function FormInfo() {
     setWodType(value);
   };
 
-  const handleJoinDateChange = ({ target: { value } }) => {
-    setJoinDate(value);
+  const handleUpDateChange = ({ target: { value } }) => {
+    setUpDate(value);
   };
 
   const handleTitleChange = ({ target: { value } }) => {
@@ -43,7 +43,7 @@ function FormInfo() {
       setContent('');
       setFile('');
     }
-    addPost({ wodType, joinDate, title, content, file });
+    addPost({ wodType, upDate, title, content, file });
   };
 
   return (
@@ -66,8 +66,8 @@ function FormInfo() {
                 type="date"
                 name=""
                 required="required"
-                value={joinDate}
-                onChange={handleJoinDateChange}
+                value={upDate}
+                onChange={handleUpDateChange}
               />
               <span className={styles.text}>등록일</span>
               <span className={styles.line}></span>
