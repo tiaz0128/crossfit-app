@@ -1,0 +1,35 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    },
+    {
+      "wodType": "",
+      "joinDate": "2021-12-17",
+      "title": "ddd",
+      "content": "dddddddd",
+      "file": "C:\\fakepath\\캡처.JPG",
+      "id": 2
+    },
+    {
+      "wodType": "Named WOD",
+      "joinDate": "2021-12-17",
+      "title": "ffff",
+      "content": "fffff",
+      "file": "C:\\fakepath\\제목 없음.png",
+      "id": 3
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}
