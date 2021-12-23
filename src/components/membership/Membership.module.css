@@ -9,7 +9,7 @@
   left: 0;
   position: fixed; 
   background-size: 100%;
-  opacity: 0.05 !important;
+  opacity: 0.03 !important;
   z-index: -1;
   content: "";
   background-position: center;

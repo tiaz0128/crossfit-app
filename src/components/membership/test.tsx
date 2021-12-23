@@ -6,6 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
+import Typography from '@mui/material/Typography';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -20,8 +21,9 @@ import {
   FormLabel,
   Stack,
 } from '@mui/material';
+import { rules } from './roles';
 
-export default function ScrollDialog() {
+function ScrollDialog() {
   const [open, setOpen] = React.useState(false);
   const [read, setRead] = React.useState(false);
   const [scroll, setScroll] = React.useState<DialogProps['scroll']>('paper');
@@ -52,8 +54,13 @@ export default function ScrollDialog() {
 
   return (
     <div>
-      <Button onClick={handleClickOpen('paper')} startIcon={<TextSnippetIcon />}>
-        회원약관
+      <Button
+        onClick={handleClickOpen('paper')}
+        variant="contained"
+        startIcon={<TextSnippetIcon />}
+        sx={{ fontSize: '1.25rem', color: 'white', padding: '1em', width: '100%' }}
+      >
+        필독! 회원약관
       </Button>
       <Dialog
         open={open}
@@ -63,7 +70,10 @@ export default function ScrollDialog() {
         aria-describedby="scroll-dialog-description"
       >
         <Stack direction="row">
-          <DialogTitle id="scroll-dialog-title" sx={{ textAlign: 'center', flex: '1' }}>
+          <DialogTitle
+            id="scroll-dialog-title"
+            sx={{ textAlign: 'center', flex: '1', fontSize: '2rem' }}
+          >
             회 원 약 관
           </DialogTitle>
           <IconButton color="primary" onClick={handleClose}>
@@ -71,20 +81,31 @@ export default function ScrollDialog() {
           </IconButton>
         </Stack>
         <DialogContent dividers={scroll === 'paper'} onScroll={handleRead}>
-          <DialogContentText
+          <DialogContent
             id="scroll-dialog-description"
             ref={descriptionElementRef}
             tabIndex={-1}
+            sx={{ padding: '0' }}
           >
-            {[...new Array(50)]
-              .map(
-                () => `Cras mattis consectetur purus sit amet fermentum.
-Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
-              )
-              .join('\n')}
-          </DialogContentText>
+            {rules.map((rule, idx) => (
+              <div key={idx}>
+                <Typography
+                  variant="h5"
+                  gutterBottom
+                  component="div"
+                  key={idx}
+                  sx={{ marginTop: '1em' }}
+                >
+                  {rule.title}
+                </Typography>
+                {rule.content.map((text, i) => (
+                  <Typography variant="body1" component="div" gutterBottom key={i}>
+                    {text}
+                  </Typography>
+                ))}
+              </div>
+            ))}
+          </DialogContent>
         </DialogContent>
 
         <DialogActions>
@@ -95,7 +116,14 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
             <FormControlLabel
               disabled={!read}
               sx={{ justifyContent: 'flex-end' }}
-              control={<Checkbox name="gilad" />}
+              control={
+                <Checkbox
+                  onClick={() => {
+                    setTimeout(() => handleClose(), 500);
+                  }}
+                  name="agree"
+                />
+              }
               label="동의합니다."
             />
           </Stack>
@@ -104,3 +132,5 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
     </div>
   );
 }
+
+export default React.memo(ScrollDialog);
