@@ -25,9 +25,11 @@ function WeeklyCard() {
   return (
     <Card
       sx={{
-        maxWidth: 375,
+        minWidth: 405,
+        height: 405,
         borderRadius: 3,
         boxShadow: 3,
+        p: 1,
       }}
     >
       <CardContent>
