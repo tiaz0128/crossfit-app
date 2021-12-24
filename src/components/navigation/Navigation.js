@@ -8,14 +8,13 @@ function Navigation({ appTitle, onSelectedPage, display, layout }) {
   const layoutType = layout === 'layout' ? styles.layout : styles.basic;
 
   const handleClassNm = (e) => {
-    const str = e.target.innerText;
-    if (str !== '') {
+    const selectMenu = e.target.innerText;
+    if (selectMenu !== '') {
       setMenu(e.target.innerText);
     }
   };
 
-  const handleClick = () => {
-    console.log('gg');
+  const handleMenuClick = () => {
     onSelectedPage();
   };
 
@@ -32,7 +31,7 @@ function Navigation({ appTitle, onSelectedPage, display, layout }) {
               key={idx}
               className={`${styles.list} ${menu === navName ? styles.active : ''}`}
               onMouseOver={handleClassNm}
-              onClick={handleClick}
+              onClick={handleMenuClick}
             >
               <a href="#">
                 <span className={styles.icon}>

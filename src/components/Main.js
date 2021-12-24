@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import styles from './Home.module.css';
+import styles from './Main.module.css';
 import { appTitle } from '../appTitle';
-import FormList from './form/FormList';
+import Header from './header/Header';
 import Navigation from './navigation/Navigation';
+import Home from './home/Home';
 
-function Home() {
+function Main() {
   const [selectedPage, setSelectedPage] = useState(false);
 
   const handleSelectedPage = () => {
@@ -12,7 +13,7 @@ function Home() {
   };
 
   return (
-    <section className={styles.content}>
+    <section className={styles.container}>
       <div className={styles.meun}>
         <Navigation
           appTitle={appTitle}
@@ -22,12 +23,17 @@ function Home() {
         />
       </div>
       {selectedPage && (
-        <div className={styles.selectPage}>
-          <FormList />
+        <div className={styles.content}>
+          <div className={styles.header}>
+            <Header />
+          </div>
+          <div className={styles.selectPage}>
+            <Home />
+          </div>
         </div>
       )}
     </section>
   );
 }
 
-export default Home;
+export default Main;

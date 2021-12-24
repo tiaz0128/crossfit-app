@@ -1,0 +1,25 @@
+.container {
+    margin: 1rem;
+}
+
+.pagePath {
+    display: flex;
+    width: 20%;    
+    min-width: 80px;
+    align-items: center;
+    justify-content: space-between;
+    color: #344767;
+}
+
+.pagePath span {
+    font-family: "Roboto","Helvetica","Arial",sans-serif;
+    font-size: 0.875rem;
+}
+
+.pageName {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.625;
+    font-family: "Roboto","Helvetica","Arial",sans-serif;
+    padding-left: 0.2rem;
+}
