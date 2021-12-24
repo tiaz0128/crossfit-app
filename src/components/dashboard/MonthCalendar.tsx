@@ -3,22 +3,21 @@ import { Badge, Card, CardContent, TextField } from '@mui/material';
 
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import * as React from 'react';
-import axios from 'axios';
 
-const api = axios.create({ baseURL: 'http://localhost:3003' });
+import { getCheckDay } from '../../api';
 
-const getDate = async (month: number | string) => {
-  const res = await api.get(`/check/2021`);
-  return res.data.month[month];
-};
-
-function WeeklyCard() {
-  const [date, setDate] = React.useState<Date | null>(new Date());
-  const [check, setCheck] = React.useState<number[]>([]);
+function MonthCalendar({
+  selectedDay,
+  setSelectedDay,
+}: {
+  selectedDay: Date;
+  setSelectedDay: (newState: Date) => void;
+}) {
+  const [checkDays, setCheckDays] = React.useState<number[]>([]);
 
   React.useEffect(() => {
-    getDate(new Date().getMonth()).then((data) => {
-      setCheck(data);
+    getCheckDay(selectedDay).then((data) => {
+      setCheckDays(data);
     });
   }, []);
 
@@ -36,16 +35,20 @@ function WeeklyCard() {
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <StaticDatePicker
             displayStaticWrapperAs="desktop"
-            value={date}
-            onChange={(newDate) => setDate(newDate)}
+            value={selectedDay}
+            onChange={(newDate) => setSelectedDay(newDate as Date)}
             renderInput={(params) => <TextField {...params} />}
             onMonthChange={async (newDate) => {
-              const data = await getDate(newDate!.getMonth());
-              setCheck(data);
+              try {
+                const data = await getCheckDay(newDate);
+                setCheckDays(data);
+              } catch (e) {
+                setCheckDays([]);
+              }
             }}
             renderDay={(day, _value, DayComponentProps) => {
               const isSelected =
-                !DayComponentProps.outsideCurrentMonth && check.includes(day!.getDate());
+                !DayComponentProps.outsideCurrentMonth && checkDays.includes(day!.getDate());
 
               return (
                 <Badge
@@ -69,4 +72,4 @@ function WeeklyCard() {
   );
 }
 
-export default WeeklyCard;
+export default MonthCalendar;

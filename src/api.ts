@@ -19,3 +19,13 @@ export const addPost = async ({
 }) => {
   await api.post('/comments', { wodType, joinDate, title, content, file });
 };
+
+export const getCheckDay = async (date: Date) => {
+  const res = await api.get(`/checkDays/${date.getFullYear()}`);
+  return res.data.checkDayOfMonth[date.getMonth()];
+};
+
+export const getWodInfo = async (date: string) => {
+  const res = await api.get(`/wodInfo/${date}`);
+  return res.data;
+};
