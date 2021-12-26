@@ -11,6 +11,10 @@ body {
     min-height: 100vh;
     background: #333;
 } */
+.select.layout {
+    position: fixed;
+    top: 10%;
+}
 
 .select.layout .profile{
     display: block;
@@ -65,7 +69,7 @@ body {
 
 .select.layout .navigation { 
     width: 100px;  
-    height: 600px;
+    height: 450px;
 } 
 
 .container {
@@ -200,17 +204,17 @@ li.active a .text {
 .container.list li:nth-child(4).active ~ .indicator {
     background: #0fbcf9;
     box-shadow: 0 15px 25px #0fbcf999;
-    transform: translateY(calc(70px * 3)); 
+    transform: translateY(calc(75px * 3)); 
 }
 
 .container.list li:nth-child(5).active ~ .indicator {
     background: #ffa801;
     box-shadow: 0 15px 25px #ffa80199;
-    transform: translateY(calc(70px * 4));
+    transform: translateY(calc(75px * 4));
 }
 
 .container.list li:nth-child(6).active ~ .indicator {
     background: #f0642c;
     box-shadow: 0 15px 25px #f0642c99;
-    transform: translateY(calc(70px * 5)); 
+    transform: translateY(calc(75px * 5)); 
 }

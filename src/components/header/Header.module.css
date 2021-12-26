@@ -4,13 +4,9 @@
     align-items: center;
     margin-bottom: 3rem;
 }
-
-.pagePath {
-    flex: 1 1 30%;
-}
+ 
 
 .serch {
     display: flex;
-    justify-content: flex-end;
-    flex: 1 1 70%;
+    justify-content: flex-end; 
 }

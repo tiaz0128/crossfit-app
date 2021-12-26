@@ -1,1 +1,1 @@
-export const appTitle = 'Crossfit Bacho';
+export const appTitle = 'Crossfit Beaho';

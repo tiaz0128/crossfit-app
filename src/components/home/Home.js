@@ -1,24 +1,21 @@
 import React from 'react';
 import styles from './Home.module.css';
-import Card from './Card';
-import Chart from './Chart.js';
+import Card from './card/Card';
+import LineChart from './chart/LineChart.js';
+import BarChart from './chart/BarChart.js';
+import UserTable from './table/UserTable';
 
 function Home() {
   return (
     <div className={styles.container}>
       <Card />
       <div className={styles.chart}>
-        <div className={styles.header}>
-          <div className={styles.title}>
-            <h6>OVERVIEW</h6>
-            <h2>Sales value</h2>
-          </div>
-          <div className={styles.buttons}>
-            <div className={styles.month}>Month</div>
-            <div className={styles.week}>Week</div>
-          </div>
-        </div>
-        <Chart />
+        <LineChart />
+        <BarChart />
+      </div>
+
+      <div className={styles.table}>
+        <UserTable />
       </div>
     </div>
   );
