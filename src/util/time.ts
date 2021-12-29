@@ -1,12 +1,12 @@
 import { eachDayOfInterval, startOfWeek, endOfWeek, format } from 'date-fns';
 
-const START_DAY = 1;
-const END_DAY = 0;
+export const START_DAY = 1;
+export const END_DAY = 0;
 
 const getSelectedWeek = (selectedDay: Date) => {
   return eachDayOfInterval({
     start: startOfWeek(selectedDay, { weekStartsOn: START_DAY }),
-    end: endOfWeek(selectedDay, { weekStartsOn: END_DAY }),
+    end: endOfWeek(selectedDay, { weekStartsOn: selectedDay.getDay() !== 0 ? END_DAY : START_DAY }),
   });
 };
 

@@ -1,5 +1,6 @@
 import { StaticDatePicker, LocalizationProvider, PickersDay } from '@mui/lab';
 import { Badge, Card, CardContent, TextField } from '@mui/material';
+import { ko } from 'date-fns/locale';
 
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import * as React from 'react';
@@ -16,6 +17,7 @@ function MonthCalendar({
   const [checkDays, setCheckDays] = React.useState<number[]>([]);
 
   React.useEffect(() => {
+    ko!.options!.weekStartsOn = 1;
     getCheckDay(selectedDay).then((data) => {
       setCheckDays(data);
     });
@@ -32,11 +34,13 @@ function MonthCalendar({
       }}
     >
       <CardContent>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <LocalizationProvider dateAdapter={AdapterDateFns} locale={ko}>
           <StaticDatePicker
             displayStaticWrapperAs="desktop"
             value={selectedDay}
-            onChange={(newDate) => setSelectedDay(newDate as Date)}
+            onChange={(newDate) => {
+              setSelectedDay(newDate as Date);
+            }}
             renderInput={(params) => <TextField {...params} />}
             onMonthChange={async (newDate) => {
               try {

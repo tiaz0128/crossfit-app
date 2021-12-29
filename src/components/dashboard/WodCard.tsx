@@ -51,6 +51,11 @@ function WodCard({ selectedDay }: { selectedDay: Date }) {
         {wodInfo ? (
           <Box>
             <Box sx={{ my: 1 }}>
+              {wodInfo.hero && (
+                <Typography component="div" variant="h5" sx={{ my: 1 }}>
+                  {wodInfo.hero}
+                </Typography>
+              )}
               <Typography component="div" variant="h6">
                 {wodInfo.teamWod !== 1 && 'Team of ' + wodInfo.teamWod}
               </Typography>
