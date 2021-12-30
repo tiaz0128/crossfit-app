@@ -21,7 +21,7 @@ import {
   CardMedia,
   Stack,
 } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { SettingsInputAntennaTwoTone, Visibility, VisibilityOff } from '@mui/icons-material';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 
 import { setFullDateFormat } from '../../util/time';
@@ -111,7 +111,9 @@ const Input = styled('input')({
 
 interface State {
   [key: string]: string | boolean;
+  img: string;
   name: string;
+  userId: string;
   birthday: string;
   phone: string;
   editPhone: boolean;
@@ -131,7 +133,9 @@ export default function DialogInputs({
   handleClose: () => void;
 }) {
   const [values, setValues] = React.useState<State>({
-    name: 'tiaz',
+    img: 'img/profile.jpg',
+    name: '주환석',
+    userId: 'tiaz0128',
     birthday: setFullDateFormat(new Date('1987-10-17')),
     phone: '010-1234-5678',
     editPhone: false,
@@ -196,12 +200,25 @@ export default function DialogInputs({
                     width: '120px',
                     height: '120px',
                     borderRadius: '50%',
+                    boxShadow: '-2px 2px 16px 1px #b0c4de',
                   },
                 }}
-                image="https://profilepicsbucket.crossfit.com/d471c-P158264_7-184.jpg"
+                image={values.img}
               />
               <label htmlFor="icon-button-file">
-                <Input accept="image/*" id="icon-button-file" type="file" />
+                <Input
+                  accept="image/*"
+                  id="icon-button-file"
+                  type="file"
+                  onChange={({ target }: { target: HTMLInputElement }) => {
+                    let fileList: FileList = target.files as FileList;
+                    setValues({
+                      ...values,
+                      img: URL.createObjectURL(fileList[0]),
+                      changeValues: true,
+                    });
+                  }}
+                />
                 <IconButton
                   color="primary"
                   aria-label="upload picture"
@@ -220,15 +237,26 @@ export default function DialogInputs({
             </Stack>
           </Box>
 
-          <TextField
-            id="name"
-            name="name"
-            label="이름"
-            variant="outlined"
-            disabled
-            fullWidth
-            value={values.name}
-          />
+          <Stack direction="row" spacing={2}>
+            <TextField
+              id="name"
+              name="name"
+              label="이름"
+              variant="outlined"
+              disabled
+              fullWidth
+              value={values.name}
+            />
+            <TextField
+              id="userId"
+              name="userId"
+              label="아이디"
+              variant="outlined"
+              disabled
+              fullWidth
+              value={values.userId}
+            />
+          </Stack>
           <TextField
             id="birthday"
             name="birthday"
@@ -340,7 +368,7 @@ export default function DialogInputs({
           />
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
+          <Button autoFocus onClick={handleClose} disabled={!values.changeValues}>
             Save changes
           </Button>
         </DialogActions>

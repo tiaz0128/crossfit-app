@@ -38,11 +38,20 @@ export default function MemberInfo({
   return (
     <Card component="section" sx={{ border: 'none', boxShadow: 'none', pb: 5 }}>
       <Box>
-        <CardMedia
-          component="img"
-          image="https://images.squarespace-cdn.com/content/v1/593d288fb3db2b7f6ec7eaf0/1549862977348-OLK7VEQCPAF0099W5KK8/CFOpen.jpg?format=1500w"
-          sx={{ maxHeight: '200px' }}
-        />
+        <Stack position="relative">
+          <CardMedia component="img" image="img/profile-bg.jpg" sx={{ maxHeight: '200px' }} />
+          <Typography
+            component="h1"
+            variant="h4"
+            position="absolute"
+            mx={1}
+            fontWeight={700}
+            sx={{ color: '#fff' }}
+          >
+            tiaz0128
+          </Typography>
+        </Stack>
+
         <Stack
           direction="row"
           sx={{
@@ -60,7 +69,7 @@ export default function MemberInfo({
               borderRadius: '50%',
               border: '5px solid #fff;',
             }}
-            image="https://profilepicsbucket.crossfit.com/d471c-P158264_7-184.jpg"
+            image="img/profile.jpg"
           />
           <Box
             sx={{
@@ -92,7 +101,12 @@ export default function MemberInfo({
 
         <Stack px={2} mt={-1}>
           <Stack direction="row" alignItems="flex-end">
-            <Typography component="span" variant="h6" letterSpacing={2}>
+            <Typography
+              component="span"
+              variant="h6"
+              letterSpacing={2}
+              sx={{ textShadow: '0.2px 0.2px 0.5px black' }}
+            >
               주환석
             </Typography>
             <Typography component="span" variant="body1" sx={{ ml: 1 }}>

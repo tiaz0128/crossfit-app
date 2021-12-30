@@ -29,8 +29,10 @@ export default function ConfirmDialog({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>아니오</Button>
-          <Button color="success" onClick={handleClose} autoFocus>
+          <Button color="error" onClick={handleClose}>
+            아니오
+          </Button>
+          <Button color="primary" onClick={handleClose} autoFocus>
             예
           </Button>
         </DialogActions>
