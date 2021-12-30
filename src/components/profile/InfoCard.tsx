@@ -19,7 +19,7 @@ function InfoCard() {
         <hr />
         <div className={styles.footer}>
           <p>
-            <span>+55%</span> 지난달 보다
+            <span>+55%</span> 지난 기간 보다
           </p>
         </div>
       </li>

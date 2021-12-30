@@ -49,7 +49,7 @@ export default function Profile() {
   }, []);
 
   return (
-    <Container component="main" sx={{ p: 3 }}>
+    <Container component="main" sx={{ p: screenSize ? 3 : 1 }}>
       <Stack component="div" direction="column">
         <MemberInfo mobile={screenSize} enableEdit={true} />
         <MembershipInfo membershipDays={membershipDays} additionalDays={additionalDays} />

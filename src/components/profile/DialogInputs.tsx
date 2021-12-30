@@ -21,13 +21,14 @@ import {
   CardMedia,
   Stack,
 } from '@mui/material';
-import { SettingsInputAntennaTwoTone, Visibility, VisibilityOff } from '@mui/icons-material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 
 import { setFullDateFormat } from '../../util/time';
 import { IMaskInput } from 'react-imask';
 
 import ConfirmDialog from './ConfirmDialog';
+import AlertDialog from './AlertDialog';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -82,7 +83,9 @@ const TextMaskCustom = React.forwardRef<HTMLElement, any>((props, ref) => {
       // eslint-disable-next-line no-octal-escape
       mask="\0\1\0-000[0]-0000"
       inputRef={ref}
-      onAccept={(value: any) => onChange({ target: { name: props.name, value } })}
+      onAccept={(value: any) => {
+        onChange({ target: { name: props.name, value } });
+      }}
       {...other}
     />
   );
@@ -92,38 +95,41 @@ const Input = styled('input')({
   display: 'none',
 });
 
-// const aboutMaskCustom = React.forwardRef<HTMLElement, any>((props, ref) => {
-//   const { onChange, ...other } = props;
-
-//   return (
-//     <IMaskInput
-//       // eslint-disable-next-line no-octal-escape
-//       mask={(value: string) => {
-//         return /.+/.test(value);
-//       }}
-//       inputRef={ref}
-//       onAccept={(value: any) => onChange({ target: { name: props.name, value } })}
-//       maxLength={300}
-//       {...other}
-//     />
-//   );
-// });
-
+interface InputValue {
+  [key: string]: string | string[] | boolean;
+  value: string | string[] | boolean;
+  change: boolean;
+}
 interface State {
-  [key: string]: string | boolean;
-  img: string;
+  [key: string]: string | boolean | InputValue;
   name: string;
   userId: string;
   birthday: string;
-  phone: string;
+
   editPhone: boolean;
-  password: string;
-  confirmPassword: string;
   showPassword: boolean;
   showConfirmPassword: boolean;
-  about: string;
-  changeValues: boolean;
+
+  userImg: InputValue;
+  phone: InputValue;
+  password: InputValue;
+  about: InputValue;
 }
+
+const initData: State = {
+  name: '주환석',
+  userId: 'tiaz0128',
+  birthday: setFullDateFormat(new Date('1987-10-17')),
+
+  editPhone: false,
+  showPassword: false,
+  showConfirmPassword: false,
+
+  userImg: { value: '', change: false },
+  phone: { value: '010-1234-5678', change: false },
+  password: { value: '!1234', change: false },
+  about: { value: '', change: false },
+};
 
 export default function DialogInputs({
   open,
@@ -132,40 +138,86 @@ export default function DialogInputs({
   open: boolean;
   handleClose: () => void;
 }) {
-  const [values, setValues] = React.useState<State>({
-    img: 'img/profile.jpg',
-    name: '주환석',
-    userId: 'tiaz0128',
-    birthday: setFullDateFormat(new Date('1987-10-17')),
-    phone: '010-1234-5678',
-    editPhone: false,
-    password: '!1234',
-    confirmPassword: '',
-    showPassword: false,
-    showConfirmPassword: false,
-    about:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque molestias quos nemo veniam. Voluptatem cum accusantium quia repudiandae vel iusto aspernatur quod repellendus voluptas id, rerum alias enim eos quas!',
-    changeValues: false,
-  });
+  const [profileInfo, setProfileInfo] = React.useState<State>(initData);
+  const [confirmPassword, setConfirmPassword] = React.useState<string>('');
+  const [openConfirm, setOpenDialog] = React.useState(false);
+  const [openAlter, setOpenAlert] = React.useState<boolean>(false);
 
-  const handleValue = (e: any) => {
+  React.useEffect(() => {
+    if (!open) {
+      setConfirmPassword('');
+      setProfileInfo(initData);
+    }
+  }, [open]);
+
+  const handleProfileInfo = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const name = e.target!.name as string;
-    if (e.target.value !== values[name]) {
-      setValues({ ...values, [e.target.name]: e.target.value, changeValues: true });
+    if (e.target.value !== (profileInfo[name] as InputValue).value) {
+      setProfileInfo({
+        ...profileInfo,
+        [e.target.name]: {
+          value: e.target.value,
+          change: e.target.value !== (initData[name] as InputValue).value,
+        },
+      });
     }
   };
 
-  const [openAlert, setOpenAlert] = React.useState(false);
+  const handleUserImg = ({ target }: { target: HTMLInputElement }) => {
+    let fileList: FileList = target.files as FileList;
 
-  const handleAlert = () => {
+    setProfileInfo({
+      ...profileInfo,
+      userImg: { value: URL.createObjectURL(fileList[0]), change: true },
+    });
+  };
+
+  const handleConfirmPassword = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ): void => setConfirmPassword(e.target.value);
+
+  const closeConfirm = () => {
+    setOpenDialog(false);
+  };
+
+  const closeAlter = () => {
     setOpenAlert(false);
   };
 
+  const isSamePassword = () => {
+    return confirmPassword === profileInfo.password.value;
+  };
+
+  const isChangeInfo = () => {
+    return (
+      profileInfo.password.change ||
+      profileInfo.userImg.change ||
+      profileInfo.phone.change ||
+      profileInfo.about.change
+    );
+  };
+
+  const validateChangeInfo = () => {
+    if (profileInfo.password.change) {
+      return isSamePassword();
+    }
+    return isChangeInfo();
+  };
+
   const beforeClose = () => {
-    if (values.changeValues) {
-      return setOpenAlert(true);
+    if (isChangeInfo()) {
+      return setOpenDialog(true);
     }
     handleClose();
+  };
+
+  const resetAllChange = (change: boolean) => {
+    const userImg: InputValue = { ...profileInfo.userImg, change };
+    const phone: InputValue = { ...profileInfo.phone, change };
+    const password: InputValue = { ...profileInfo.password, change };
+    const about: InputValue = { ...profileInfo.about, change };
+
+    return { ...profileInfo, userImg, phone, password, about };
   };
 
   return (
@@ -201,23 +253,17 @@ export default function DialogInputs({
                     height: '120px',
                     borderRadius: '50%',
                     boxShadow: '-2px 2px 16px 1px #b0c4de',
+                    filter: profileInfo.userImg.value ? '' : 'grayscale(1)',
                   },
                 }}
-                image={values.img}
+                image={(profileInfo.userImg.value as string) || 'img/logo.jpg'}
               />
               <label htmlFor="icon-button-file">
                 <Input
                   accept="image/*"
                   id="icon-button-file"
                   type="file"
-                  onChange={({ target }: { target: HTMLInputElement }) => {
-                    let fileList: FileList = target.files as FileList;
-                    setValues({
-                      ...values,
-                      img: URL.createObjectURL(fileList[0]),
-                      changeValues: true,
-                    });
-                  }}
+                  onChange={handleUserImg}
                 />
                 <IconButton
                   color="primary"
@@ -245,7 +291,7 @@ export default function DialogInputs({
               variant="outlined"
               disabled
               fullWidth
-              value={values.name}
+              value={profileInfo.name}
             />
             <TextField
               id="userId"
@@ -254,7 +300,7 @@ export default function DialogInputs({
               variant="outlined"
               disabled
               fullWidth
-              value={values.userId}
+              value={profileInfo.userId}
             />
           </Stack>
           <TextField
@@ -265,7 +311,7 @@ export default function DialogInputs({
             variant="outlined"
             fullWidth
             disabled
-            value={values.birthday}
+            value={profileInfo.birthday}
           />
 
           <FormControl
@@ -284,15 +330,17 @@ export default function DialogInputs({
             <OutlinedInput
               id="phone"
               name="phone"
-              value={values.phone}
-              onChange={handleValue}
+              value={profileInfo.phone.value}
+              onChange={handleProfileInfo}
               inputComponent={TextMaskCustom}
-              disabled={values.editPhone ? false : true}
+              disabled={profileInfo.editPhone ? false : true}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle edit phone"
-                    onClick={() => setValues({ ...values, editPhone: !values.editPhone })}
+                    onClick={() =>
+                      setProfileInfo({ ...profileInfo, editPhone: !profileInfo.editPhone })
+                    }
                     edge="end"
                   >
                     <EditIcon />
@@ -306,17 +354,19 @@ export default function DialogInputs({
             <OutlinedInput
               id="password"
               name="password"
-              type={values.showPassword ? 'text' : 'password'}
-              value={values.password}
-              onChange={handleValue}
+              type={profileInfo.showPassword ? 'text' : 'password'}
+              value={profileInfo.password.value}
+              onChange={handleProfileInfo}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
-                    onClick={() => setValues({ ...values, showPassword: !values.showPassword })}
+                    onClick={() =>
+                      setProfileInfo({ ...profileInfo, showPassword: !profileInfo.showPassword })
+                    }
                     edge="end"
                   >
-                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                    {profileInfo.showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
               }
@@ -324,56 +374,87 @@ export default function DialogInputs({
             />
           </FormControl>
           <FormControl fullWidth variant="outlined">
-            <InputLabel color="error" htmlFor="outlined-adornment-password">
+            <InputLabel
+              color={isSamePassword() ? 'primary' : 'error'}
+              htmlFor="outlined-adornment-password"
+            >
               Password Confirm
             </InputLabel>
             <OutlinedInput
               id="confirmPassword"
               name="confirmPassword"
-              type={values.showConfirmPassword ? 'text' : 'password'}
-              value={values.confirmPassword}
-              // disabled
-              color="error"
-              onChange={handleValue}
+              type={profileInfo.showConfirmPassword ? 'text' : 'password'}
+              value={confirmPassword}
+              disabled={!profileInfo.password.change}
+              color={isSamePassword() ? 'primary' : 'error'}
+              onChange={handleConfirmPassword}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
+                    disabled={!profileInfo.password.change}
                     onClick={() =>
-                      setValues({ ...values, showConfirmPassword: !values.showConfirmPassword })
+                      setProfileInfo({
+                        ...profileInfo,
+                        showConfirmPassword: !profileInfo.showConfirmPassword,
+                      })
                     }
                     edge="end"
                   >
-                    {values.showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                    {profileInfo.showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
               }
               label="confirmPassword"
             />
-            <FormHelperText id="outlined-weight-helper-text" sx={{ color: 'red' }}>
-              not matched password
-            </FormHelperText>
+            {profileInfo.password.change && (
+              <FormHelperText id="outlined-weight-helper-text" sx={{ color: 'red' }}>
+                {!isSamePassword() && 'not matched password'}
+              </FormHelperText>
+            )}
           </FormControl>
 
           <TextField
             id="about"
             name="about"
             label="about"
+            placeholder={(profileInfo.about.value as string) || '자기소개를 해보세요!'}
             multiline
-            rows={6}
+            rows={5}
             variant="filled"
             fullWidth
             focused
-            value={values.about}
+            value={profileInfo.about.value}
+            onChange={handleProfileInfo}
           />
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose} disabled={!values.changeValues}>
+          <Button
+            autoFocus
+            onClick={() => {
+              setProfileInfo(resetAllChange(false));
+              setOpenAlert(true);
+            }}
+            disabled={!validateChangeInfo()}
+          >
             Save changes
           </Button>
         </DialogActions>
       </BootstrapDialog>
-      <ConfirmDialog openAlert={openAlert} handleClose={handleAlert} />
+      <ConfirmDialog
+        openConfirm={openConfirm}
+        confirmTitle={'변경'}
+        confirmDescription={'변경된 데이터가 있습니다. 저장하지 않고 닫겠습니까?'}
+        closeConfirm={closeConfirm}
+        handleClose={handleClose}
+      />
+
+      <AlertDialog
+        alertTitle="알림"
+        alertDescription="저장 되었습니다."
+        openAlter={openAlter}
+        closeAlter={closeAlter}
+      />
     </div>
   );
 }
