@@ -12,23 +12,67 @@
   "checkDays": [
     {
       "id": 2021,
-      "checkDayOfMonth":[
-        [1,2,6,30],
-        [2,6],
-        [1,2,6],
-        [1,2,6],
-        [1,2,6],
-        [6],
-        [1,2,6],
-        [1,2,6],
-        [1,2,6],
-        [20,23],
-        [12,30],
-        [11,12,30]
+      "checkDayOfMonth": [
+        [
+          1,
+          2,
+          6,
+          30
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          1,
+          2,
+          6
+        ],
+        [
+          1,
+          2,
+          6
+        ],
+        [
+          1,
+          2,
+          6
+        ],
+        [
+          6
+        ],
+        [
+          1,
+          2,
+          6
+        ],
+        [
+          1,
+          2,
+          6
+        ],
+        [
+          1,
+          2,
+          6
+        ],
+        [
+          20,
+          23
+        ],
+        [
+          12,
+          30
+        ],
+        [
+          11,
+          12,
+          30
+        ]
       ]
     }
   ],
-  "wodInfo" : [
+  "wodInfo": [
     {
       "id": "2021-12-20",
       "teamWod": 1,
@@ -36,7 +80,12 @@
       "option": "For time 50-40-30-20-10",
       "workOut": {
         "buyIn": "",
-        "main": ["Push Up", "Sit Up", "Air Squat", "sec Hollow Hold"],
+        "main": [
+          "Push Up",
+          "Sit Up",
+          "Air Squat",
+          "sec Hollow Hold"
+        ],
         "buyOut": ""
       },
       "hero": ""
@@ -48,7 +97,10 @@
       "option": "AMRAP ",
       "workOut": {
         "buyIn": "",
-        "main": ["12 Thruster (95/65)", "12 Burpee"],
+        "main": [
+          "12 Thruster (95/65)",
+          "12 Burpee"
+        ],
         "buyOut": ""
       },
       "hero": ""
@@ -79,7 +131,11 @@
       "option": "EMOM",
       "workOut": {
         "buyIn": "",
-        "main": ["A: Cal Row", "B: Squat Clean(165/115)", "C: T.T.B"],
+        "main": [
+          "A: Cal Row",
+          "B: Squat Clean(165/115)",
+          "C: T.T.B"
+        ],
         "buyOut": ""
       },
       "hero": ""
@@ -100,6 +156,17 @@
         "buyOut": ""
       },
       "hero": "EAST ATLANTA SANTA"
+    }
+  ],
+  "profile": [
+    {
+      "name": "주환석",
+      "birthday": "1987-10-17",
+      "userImg": "blob:http://localhost:3000/2d9e1f5c-6fb9-4a17-a0b6-9eee394e0dfa",
+      "phone": "010-1234-1234",
+      "password": "qwer123!1",
+      "about": "",
+      "id": "tiaz0128"
     }
   ]
 }

@@ -37,6 +37,12 @@ export default function DateRangeCalendar({
         '& div[role="presentation"]': {
           flexFlow: 'row-reverse',
         },
+        '& .MuiPickerStaticWrapper-root span:nth-of-type(6)': {
+          color: 'blue',
+        },
+        '& .MuiPickerStaticWrapper-root span:nth-of-type(7)': {
+          color: 'red',
+        },
       }}
     >
       <Stack sx={{ px: 3, mt: 2 }}>

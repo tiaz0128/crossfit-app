@@ -11,12 +11,14 @@ export default function AlertDialog({
   alertTitle,
   alertDescription,
   closeAlter,
+  getSavedData,
   handleClose,
 }: {
   openAlter: boolean;
   alertTitle: string;
   alertDescription: string;
   closeAlter: () => void;
+  getSavedData?: () => void;
   handleClose?: () => void;
 }) {
   return (
@@ -36,6 +38,7 @@ export default function AlertDialog({
             color="primary"
             onClick={() => {
               closeAlter();
+              getSavedData && getSavedData();
               handleClose && handleClose();
             }}
             autoFocus

@@ -97,7 +97,7 @@ export default function MemberInfo({
           </Box>
         </Stack>
 
-        <DialogInputs open={open} handleClose={handleClose} />
+        <DialogInputs open={open} handleClose={handleClose} userId="tiaz0128" />
 
         <Stack px={2} mt={-1}>
           <Stack direction="row" alignItems="flex-end">
