@@ -23,13 +23,13 @@ export default function MembershipInfo({
           <InfoCard />
         </Box>
 
-        <Box sx={{ marginBottom: 2 }}>
+        <Card sx={{ marginBottom: 2 }}>
           <DateRangeCalendar
             startDay={membershipDays[0]}
             endDay={membershipDays[1]}
             additionalDays={additionalDays}
           />
-        </Box>
+        </Card>
 
         <Box sx={{ marginBottom: 5 }}>
           <Typography component="h3" variant="h6" sx={{ marginBottom: 1 }}>

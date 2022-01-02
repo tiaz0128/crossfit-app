@@ -194,17 +194,23 @@ export default function DialogInputs({
   };
 
   React.useEffect(() => {
-    if (!initData) {
-      getInitData();
-    } else if (isSamePassword(profileInfo.password.value, initData.password.value)) {
+    if (open) getInitData();
+    return () => {
       setConfirmPassword('');
-    }
-  }, [profileInfo]);
+      setEditPhone(false);
+      setShowPassword(false);
+      setShowConfirmPassword(false);
+    };
+  }, [open]);
 
   const handleProfileInfo = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const name = e.target.name;
 
     if (name === 'about' && !validateTextLength(e.target.value, ABOUT_MAX_LENGTH)) return;
+
+    if (name === 'password' && isSamePassword(e.target.value, initData!.password.value)) {
+      setConfirmPassword('');
+    }
 
     setProfileInfo({
       ...profileInfo,

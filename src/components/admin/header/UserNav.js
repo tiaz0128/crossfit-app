@@ -8,12 +8,11 @@ import { Link } from 'react-router-dom';
 function UserNav() {
   return (
     <div className={styles.items}>
-      <Link to={'/mypage'} className={styles.text}>
+      <Link to={'/profile'}>
         <button className={styles.item}>
           <FaUserAlt className="icon" size="16" color="#7b809a" />
         </button>
       </Link>
-
       <button className={styles.item}>
         <IoMdSettings className="icon" size="20" color="#7b809a" />
       </button>
