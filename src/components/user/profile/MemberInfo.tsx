@@ -9,11 +9,46 @@ import {
   Divider,
   Grid,
   Box,
+  Input,
+  InputAdornment,
 } from '@mui/material';
 
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import SettingsApplicationsRoundedIcon from '@mui/icons-material/SettingsApplicationsRounded';
 import DialogInputs from './DialogInputs';
+import { IMaskInput } from 'react-imask';
+
+const numberRecordMaskCustom = React.forwardRef<HTMLElement, any>((props, ref) => {
+  const { onChange, ...other } = props;
+
+  return (
+    <IMaskInput
+      // eslint-disable-next-line no-octal-escape
+      mask="000"
+      inputRef={ref}
+      onAccept={(value: any) => {
+        onChange({ target: { name: props.name, value } });
+      }}
+      {...other}
+    />
+  );
+});
+
+const timeRecordMaskCustom = React.forwardRef<HTMLElement, any>((props, ref) => {
+  const { onChange, ...other } = props;
+
+  return (
+    <IMaskInput
+      // eslint-disable-next-line no-octal-escape
+      mask="0[0]:00"
+      inputRef={ref}
+      onAccept={(value: any) => {
+        onChange({ target: { name: props.name, value } });
+      }}
+      {...other}
+    />
+  );
+});
 
 MemberInfo.defaultProps = {
   enableEdit: false,
@@ -27,6 +62,7 @@ export default function MemberInfo({
   enableEdit?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const [edit, setEdit] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -133,8 +169,13 @@ export default function MemberInfo({
             </Typography>
             {enableEdit && (
               <Box component="menu" ml={2}>
-                <Button variant="contained" size="small">
-                  Edit
+                <Button
+                  variant="contained"
+                  color={edit ? 'warning' : 'primary'}
+                  size="small"
+                  onClick={() => setEdit(!edit)}
+                >
+                  {edit ? 'Save' : 'Edit'}
                 </Button>
               </Box>
             )}
@@ -146,12 +187,20 @@ export default function MemberInfo({
           >
             <Grid item sx={{ marginRight: 2, minWidth: '200px' }}>
               <Stack direction="row" justifyContent="space-between">
-                <Typography component="span" variant="subtitle1">
+                <Typography component="span" variant="subtitle1" sx={{ height: '32px' }}>
                   Back Squat
                 </Typography>
-                <Typography component="span" variant="subtitle1">
-                  150 kg
-                </Typography>
+                {edit ? (
+                  <Input
+                    inputComponent={numberRecordMaskCustom}
+                    endAdornment={<InputAdornment position="end">kg</InputAdornment>}
+                    sx={{ width: '55px' }}
+                  ></Input>
+                ) : (
+                  <Typography component="span" variant="subtitle1">
+                    150 kg
+                  </Typography>
+                )}
               </Stack>
 
               <Stack direction="row" justifyContent="space-between">
@@ -183,12 +232,20 @@ export default function MemberInfo({
 
             <Grid item sx={{ marginRight: 2, minWidth: '200px' }}>
               <Stack direction="row" justifyContent={'space-between'}>
-                <Typography component="span" variant="subtitle1">
+                <Typography component="span" variant="subtitle1" sx={{ height: '32px' }}>
                   Fran
                 </Typography>
-                <Typography component="span" variant="subtitle1">
-                  2:13
-                </Typography>
+                {edit ? (
+                  <Input
+                    placeholder="00:00"
+                    inputComponent={timeRecordMaskCustom}
+                    sx={{ width: '42px' }}
+                  ></Input>
+                ) : (
+                  <Typography component="span" variant="subtitle1">
+                    2:13
+                  </Typography>
+                )}
               </Stack>
 
               <Stack direction="row" justifyContent={'space-between'}>

@@ -11,6 +11,7 @@ import { differenceInCalendarDays, addDays } from 'date-fns';
 import { DateRangePickerDay } from '@mui/lab';
 import { Stack, Typography } from '@mui/material';
 import format from 'date-fns/format';
+import { setFullDateFormat } from '../../../util/time';
 
 export default function DateRangeCalendar({
   startDay,
@@ -83,7 +84,13 @@ export default function DateRangeCalendar({
             return (
               <DateRangePickerDay
                 sx={
-                  ((isPastDay || isFuture) && { color: 'gray', opacity: '0.2' }) || {
+                  ((isPastDay || isFuture) && { color: 'gray', opacity: '0.2' }) ||
+                  (dateRangePickerDayProps.today && {
+                    background: '#ffc107',
+                    color: '#fff',
+                    fontWeight: '500',
+                    border: '0 !important',
+                  }) || {
                     background: isAddDays ? '' : 'lightpink',
                   }
                 }

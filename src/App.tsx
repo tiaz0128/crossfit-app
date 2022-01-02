@@ -10,6 +10,7 @@ import BoardList from './components/admin/boardManagement/BoardList';
 import styles from './components/Main.module.css';
 import MemberList from './components/admin/memberManagement/MemberList';
 import './App.css';
+import Profile from './components/user/profile/Profile';
 // import DashBoard from './components/dashboard/DashBoard';
 // import Membership from './components/membership/Membership';
 // import Profile from './components/profile/Profile';
@@ -42,6 +43,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/member" element={<MemberList />} />
                 <Route path="/board" element={<BoardList />} />
+                <Route path="/profile" element={<Profile />} />
               </Routes>
             </div>
           </div>
