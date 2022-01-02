@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './Navigation.module.css';
 import { navLinks } from './navLinks';
+import { Link } from 'react-router-dom';
 
 function Navigation({ appTitle, onSelectedPage, display, layout }) {
   const [menu, setMenu] = useState('HOME');
@@ -26,7 +27,7 @@ function Navigation({ appTitle, onSelectedPage, display, layout }) {
       <h1 className={styles.title}>{appTitle}</h1>
       <div className={styles.navigation}>
         <ul className={`${styles.container} ${displayType}`}>
-          {navLinks.map(({ navName, icon }, idx) => (
+          {navLinks.map(({ navName, icon, path }, idx) => (
             <li
               key={idx}
               className={`${styles.list} ${menu === navName ? styles.active : ''}`}
@@ -37,7 +38,9 @@ function Navigation({ appTitle, onSelectedPage, display, layout }) {
                 <span className={styles.icon}>
                   <ion-icon name={`${icon}`}></ion-icon>
                 </span>
-                <span className={styles.text}>{navName}</span>
+                <Link to={`${path}`} className={styles.text}>
+                  {navName}
+                </Link>
               </a>
             </li>
           ))}

@@ -1,11 +1,12 @@
 import React from 'react';
 import styles from './UserTable.module.css';
 import { Table } from 'react-bootstrap';
-import PageNav from './pagination/PageNav';
+// import PageNav from './pagination/PageNav';
+import Pagination from '@mui/material/Pagination';
 
 function UserTable() {
   return (
-    <>
+    <div className={styles.table}>
       <div className={styles.header}>
         <h5>회원 리스트</h5>
       </div>
@@ -39,9 +40,10 @@ function UserTable() {
         </tbody>
       </Table>
       <div className={styles.footer}>
-        <PageNav />
+        {/* <PageNav /> */}
+        <Pagination count={10} variant="outlined" color="primary" />
       </div>
-    </>
+    </div>
   );
 }
 

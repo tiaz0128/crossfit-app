@@ -14,9 +14,7 @@ function Home() {
         <BarChart />
       </div>
 
-      <div className={styles.table}>
-        <UserTable />
-      </div>
+      <UserTable />
     </div>
   );
 }

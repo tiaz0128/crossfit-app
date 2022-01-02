@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import styles from './Main.module.css';
 import { appTitle } from '../appTitle';
 import Header from './header/Header';
 import Navigation from './navigation/Navigation';
 import Home from './home/Home';
+import BoardList from './boardManagement/BoardList';
 
 function Main() {
   const [selectedPage, setSelectedPage] = useState(false);
@@ -28,7 +30,10 @@ function Main() {
             <Header />
           </div>
           <div className={styles.selectPage}>
-            <Home />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/border" element={<BoardList />} />
+            </Routes>
           </div>
         </div>
       )}

@@ -2,16 +2,3 @@
     display: flex;
     justify-content: space-between;
 }
-
-.table {
-    margin: 1rem 0;
-    border: 1px solid #fff;
-    border-radius: 5px;
-    background: #fff;
-}
-
-.table thead{
-    color: #8898aa;
-    background-color: #f6f9fc;
-    border-bottom: 1px solid #e9ecef;
-}

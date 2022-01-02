@@ -1,9 +1,11 @@
 import React, { PureComponent } from 'react';
 import styles from './LineChart.module.css';
-import { LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { data } from './chartData';
 
 export default class Chart extends PureComponent {
+  static demoUrl = 'https://codesandbox.io/s/line-chart-width-reference-line-edjv0';
+
   render() {
     return (
       <div className={styles.chart}>
@@ -17,32 +19,32 @@ export default class Chart extends PureComponent {
             <div className={styles.week}>Week</div>
           </div>
         </div>
-        <LineChart
-          width={500}
-          height={300}
-          data={data}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <XAxis
-            dataKey="name"
-            axisLine={{ stroke: 'none' }}
-            tickLine={{ stroke: 'none' }}
-            tick={{ fontSize: 13, fill: '#6b7d9c' }}
-          />
-          <YAxis
-            axisLine={{ stroke: 'none' }}
-            tickLine={{ stroke: 'none' }}
-            padding={{ top: 10, bottom: 10 }}
-            tick={{ fontSize: 13, fill: '#6b7d9c' }}
-          />
-          <Tooltip wrapperStyle={{ backgroundColor: 'red' }} />
-          <Line type="monotone" dataKey="total" stroke="#8884d8" strokeWidth={5} dot={false} />
-        </LineChart>
+        <ResponsiveContainer width="100%" height="30vh" aspect={3}>
+          <LineChart
+            data={data}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <XAxis
+              dataKey="name"
+              axisLine={{ stroke: 'none' }}
+              tickLine={{ stroke: 'none' }}
+              tick={{ fontSize: 13, fill: '#6b7d9c' }}
+            />
+            <YAxis
+              axisLine={{ stroke: 'none' }}
+              tickLine={{ stroke: 'none' }}
+              padding={{ top: 10, bottom: 10 }}
+              tick={{ fontSize: 13, fill: '#6b7d9c' }}
+            />
+            <Tooltip wrapperStyle={{ backgroundColor: 'red' }} />
+            <Line type="monotone" dataKey="total" stroke="#8884d8" strokeWidth={5} dot={false} />
+          </LineChart>
+        </ResponsiveContainer>
       </div>
     );
   }
