@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 
 import { differenceInCalendarDays } from 'date-fns';
-import { setFullDateFormat } from '../../util/time';
+import { setFullDateFormat } from '../../../util/time';
 
 interface InfoDays {
   id: string;

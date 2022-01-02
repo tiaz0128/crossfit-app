@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { addWeeks } from 'date-fns';
-import { getSelectedWeek, getClickedDate } from '../../util/time';
+import { getSelectedWeek, getClickedDate } from '../../../util/time';
 
 import MonthCalendar from './MonthCalendar';
 import MuscleMap from './MuscleMap';

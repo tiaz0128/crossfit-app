@@ -2,7 +2,7 @@ import { format, isSameDay } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import * as React from 'react';
 
-import { END_DAY } from '../../util/time';
+import { END_DAY } from '../../../util/time';
 
 function WeekCalendar({
   selectedDay,

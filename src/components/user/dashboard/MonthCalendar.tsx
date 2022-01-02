@@ -5,7 +5,7 @@ import { ko } from 'date-fns/locale';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import * as React from 'react';
 
-import { getCheckDay } from '../../api';
+import { getCheckDay } from '../../../api';
 
 function MonthCalendar({
   selectedDay,

@@ -29,7 +29,7 @@ import { IMaskInput } from 'react-imask';
 import ConfirmDialog from './ConfirmDialog';
 import AlertDialog from './AlertDialog';
 
-import { getProfile, setProfile } from '../../api';
+import { getProfile, setProfile } from '../../../api';
 
 const INIT_PROFILE_INFO = {
   name: '',

@@ -3,8 +3,8 @@ import { Box, Card, CardContent, Divider, Typography } from '@mui/material';
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 
-import { getWodInfo } from '../../api';
-import { setFullDateFormat } from '../../util/time';
+import { getWodInfo } from '../../../api';
+import { setFullDateFormat } from '../../../util/time';
 
 interface WodInfo {
   id: string;
