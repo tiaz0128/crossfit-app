@@ -4,11 +4,11 @@ import { Table } from 'react-bootstrap';
 // import PageNav from './pagination/PageNav';
 import Pagination from '@mui/material/Pagination';
 
-function UserTable() {
+function UserTable({ title }) {
   return (
     <div className={styles.table}>
       <div className={styles.header}>
-        <h5>회원 리스트</h5>
+        <h5>{title}</h5>
       </div>
       <Table responsive>
         <thead>

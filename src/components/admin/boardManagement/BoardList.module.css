@@ -1,9 +1,11 @@
-.board{    
+.tab {    
     position: relative;
     width: 100%;
 }
 
-.btn button{
+.board {}
+
+.btn button {
     width: 5%;
     min-width: 55px;
     display: flex;

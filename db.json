@@ -7,7 +7,8 @@
       "content": "fff",
       "file": "C:\\fakepath\\라이언.PNG",
       "id": 1
-    },{
+    },
+    {
       "wodType": "Daily WOD",
       "upDate": "2021-12-18",
       "title": "fff",
@@ -169,10 +170,10 @@
     {
       "name": "주환석",
       "birthday": "1987-10-17",
-      "userImg": "blob:http://localhost:3000/2d9e1f5c-6fb9-4a17-a0b6-9eee394e0dfa",
-      "phone": "010-1234-1234",
+      "userImg": "blob:http://localhost:3001/80f1e7d4-11b2-466e-8a4d-debb20696551",
+      "phone": "",
       "password": "qwer123!1",
-      "about": "",
+      "about": "ggggg",
       "id": "tiaz0128"
     }
   ]

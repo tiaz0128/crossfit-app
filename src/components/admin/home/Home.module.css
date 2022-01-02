@@ -2,3 +2,9 @@
     display: flex;
     justify-content: space-between;
 }
+
+.card{
+    position: relative; 
+    display: flex;
+    justify-content: space-between;
+}
