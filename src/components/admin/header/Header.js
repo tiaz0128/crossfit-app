@@ -4,11 +4,11 @@ import PagePath from './PagePath';
 import Serch from './Serch';
 import UserNav from './UserNav';
 
-function Header() {
+function Header({ pagePath }) {
   return (
     <div className={styles.container}>
       <div className={styles.pagePath}>
-        <PagePath />
+        <PagePath pagePath={pagePath} />
       </div>
       <div className={styles.serch}>
         <Serch />

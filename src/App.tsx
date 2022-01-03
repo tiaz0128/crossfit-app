@@ -12,13 +12,16 @@ import styles from './App.module.css';
 import Profile from './components/user/profile/Profile';
 // import DashBoard from './components/dashboard/DashBoard';
 // import Membership from './components/membership/Membership';
-// import Profile from './components/profile/Profile';
 
 function App() {
   const [selectedPage, setSelectedPage] = useState(false);
+  const [pagePath, setPagePath] = useState('HOME');
 
   const handleSelectedPage = () => {
     setSelectedPage(true);
+    const url: string = window.location.pathname.split('/')[1].toUpperCase();
+    url === '' ? setPagePath('HOME') : setPagePath(url);
+    console.log(url);
   };
   return (
     <div className="App">
@@ -35,7 +38,7 @@ function App() {
         {selectedPage && (
           <div className={styles.content}>
             <div className={styles.header}>
-              <Header />
+              <Header pagePath={pagePath} />
             </div>
             <div className={styles.selectPage}>
               <Routes>
