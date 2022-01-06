@@ -11,6 +11,7 @@ import styles from './components/Main.module.css';
 import MemberList from './components/admin/memberManagement/MemberList';
 import './App.css';
 import Profile from './components/user/profile/Profile';
+import LoginForm from './components/common/login/LoginForm';
 // import DashBoard from './components/dashboard/DashBoard';
 // import Membership from './components/membership/Membership';
 // import Profile from './components/profile/Profile';
@@ -24,7 +25,9 @@ function App() {
   return (
     <div className="App">
       <CssBaseline />
-      <section className={styles.container}>
+
+      <LoginForm />
+      {/* <section className={styles.container}>
         <div className={styles.meun}>
           <Navigation
             appTitle={appTitle}
@@ -48,7 +51,7 @@ function App() {
             </div>
           </div>
         )}
-      </section>
+      </section> */}
     </div>
   );
 }
