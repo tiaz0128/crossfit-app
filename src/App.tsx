@@ -12,6 +12,7 @@ import MemberList from './components/admin/memberManagement/MemberList';
 import './App.css';
 import Profile from './components/user/profile/Profile';
 import LoginForm from './components/common/login/LoginForm';
+import { useAuth } from './api/firebase';
 // import DashBoard from './components/dashboard/DashBoard';
 // import Membership from './components/membership/Membership';
 // import Profile from './components/profile/Profile';
@@ -22,11 +23,22 @@ function App() {
   const handleSelectedPage = () => {
     setSelectedPage(true);
   };
+
+  const [currentUser, setCurrentUser] = useAuth();
+
   return (
     <div className="App">
       <CssBaseline />
 
-      <LoginForm />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="member" element={<MemberList />} />
+        <Route path="board" element={<BoardList />} />
+        <Route path="profile" element={<Profile />} />
+        <Route path="login" element={<LoginForm uid={currentUser?.uid || null} />} />
+        <Route path="*" element={<>Go to home</>} />
+      </Routes>
+
       {/* <section className={styles.container}>
         <div className={styles.meun}>
           <Navigation
@@ -43,10 +55,16 @@ function App() {
             </div>
             <div className={styles.selectPage}>
               <Routes>
-                <Route path="/" element={<Home />} />
+                <Route
+                  path="/"
+                  element={
+                    currentUser?.uid ? <Home /> : <LoginForm uid={currentUser?.uid || null} />
+                  }
+                />
                 <Route path="/member" element={<MemberList />} />
                 <Route path="/board" element={<BoardList />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="*" element={<LoginForm uid={currentUser?.uid || null} />} />
               </Routes>
             </div>
           </div>

@@ -1,13 +1,11 @@
 import { Stack, Box, CardMedia, Button } from '@mui/material';
 import { styled } from '@mui/system';
 import * as React from 'react';
+import { logoIn, logoOut } from '../../../api/firebase';
+import { useNavigate } from 'react-router-dom';
 
 import EmailInput from '../form/EmailInput';
 import PasswordInputProps from '../form/PasswordInput';
-
-// interface LoginFormProps {
-
-// }
 
 const MainContainer = styled('main')(({ theme }) => ({
   display: 'flex',
@@ -36,9 +34,34 @@ const BackgroundBox = styled('div')(({ theme }) => ({
   },
 }));
 
-function LoginForm() {
+interface LoginFormProps {
+  uid: string | null;
+}
+
+function LoginForm({ uid }: LoginFormProps) {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+
+  let navigate = useNavigate();
+
+  const handleLogin = async () => {
+    if (email && password) {
+      try {
+        await logoIn(email, password);
+        navigate('/');
+      } catch {
+        alert('Error!!!');
+      }
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logoOut();
+    } catch {
+      alert('로그아웃 에러 발생!!');
+    }
+  };
 
   return (
     <MainContainer>
@@ -87,15 +110,18 @@ function LoginForm() {
                 password={password}
                 handlePassword={(e) => setPassword(e.target.value)}
               />
+
               <Button
                 variant="contained"
                 size="large"
+                color={uid ? 'error' : 'primary'}
                 type="submit"
                 onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                   e.preventDefault();
+                  uid ? handleLogout() : handleLogin();
                 }}
               >
-                LOGIN
+                {uid ? 'LOGOUT' : 'LOGIN'}
               </Button>
             </Stack>
           </Box>
