@@ -1,9 +1,9 @@
-import { CssBaseline } from '@mui/material';
-import React from 'react';
+import { Box, CssBaseline } from '@mui/material';
+import React, { useEffect, useRef } from 'react';
 import { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { appTitle } from './appTitle';
-import Header from './components/admin/header/Header';
+// import Header from './components/admin/header/Header';
 import Home from './components/admin/home/Home';
 import Navigation from './components/admin/navigation/Navigation';
 import BoardList from './components/admin/boardManagement/BoardList';
@@ -13,9 +13,15 @@ import './App.css';
 import Profile from './components/user/profile/Profile';
 import LoginForm from './components/common/login/LoginForm';
 import { useAuth } from './api/firebase';
+import Loading from './components/common/Loading';
+import { Link } from 'react-router-dom';
+import Header from './components/common/Header';
+import NotFound from './components/common/NotFound';
 // import DashBoard from './components/dashboard/DashBoard';
 // import Membership from './components/membership/Membership';
 // import Profile from './components/profile/Profile';
+
+const DRAWER_WIDTH = 200;
 
 function App() {
   const [selectedPage, setSelectedPage] = useState(false);
@@ -24,20 +30,48 @@ function App() {
     setSelectedPage(true);
   };
 
-  const [currentUser, setCurrentUser] = useAuth();
+  const [currentUser, setCurrentUser, loading, setLoading] = useAuth();
+
+  let location = useLocation();
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    if (!currentUser) navigate('/login');
+  }, []);
 
   return (
     <div className="App">
       <CssBaseline />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="member" element={<MemberList />} />
-        <Route path="board" element={<BoardList />} />
-        <Route path="profile" element={<Profile />} />
-        <Route path="login" element={<LoginForm uid={currentUser?.uid || null} />} />
-        <Route path="*" element={<>Go to home</>} />
-      </Routes>
+      <Box sx={(location.pathname !== '/login' && { display: 'flex' }) || {}}>
+        {location.pathname !== '/login' && <Header drawerWidth={DRAWER_WIDTH} />}
+        <Box
+          component="main"
+          sx={
+            (location.pathname !== '/login' && {
+              flexGrow: 1,
+              p: 1,
+              mt: 10,
+              width: `calc(100% - ${DRAWER_WIDTH}px)`,
+            }) ||
+            {}
+          }
+        >
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="member" element={<MemberList />} />
+            <Route path="board" element={<BoardList />} />
+            <Route path="profile" element={<Profile />} />
+            <Route
+              path="login"
+              element={
+                <LoginForm currentUser={currentUser} loading={loading} setLoading={setLoading} />
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Box>
+      </Box>
 
       {/* <section className={styles.container}>
         <div className={styles.meun}>
