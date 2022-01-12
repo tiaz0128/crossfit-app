@@ -25,12 +25,14 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
+setPersistence(auth, browserSessionPersistence);
 const db = getFirestore();
 
 export function logoIn(email: string, password: string) {
-  return setPersistence(auth, browserSessionPersistence).then(() =>
-    signInWithEmailAndPassword(auth, email, password)
-  );
+  //   return setPersistence(auth, browserSessionPersistence).then(() =>
+  //     signInWithEmailAndPassword(auth, email, password)
+  //   );
+  return signInWithEmailAndPassword(auth, email, password);
 }
 
 export function logoOut() {
@@ -46,22 +48,31 @@ export async function getUserData(uid: string) {
   return member;
 }
 
-interface CurrentUser {
-  uid: string;
-  [key: string]: string | Object;
-}
-
-export function useAuth(): [User | null, React.Dispatch<React.SetStateAction<User | null>>] {
+export function useAuth(): [
+  User | null,
+  React.Dispatch<React.SetStateAction<User | null>>,
+  boolean,
+  React.Dispatch<React.SetStateAction<boolean>>
+] {
   const [userInfo, setUserInfo] = useState<User | null>(null);
-  let navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log(auth.currentUser);
+
     const unSub = onAuthStateChanged(auth, (user: User | null) => {
-      // navigate(user ? '/' : '/login');
       setUserInfo(user);
+      setLoading(false);
     });
     return unSub;
   }, []);
 
-  return [userInfo, setUserInfo];
+  // useEffect(() => {
+  //   let t: null | NodeJS.Timeout = null;
+  //   if (loading) t = setTimeout(() => setLoading(false), 800);
+
+  //   return () => clearTimeout(t as NodeJS.Timeout);
+  // }, [loading]);
+
+  return [userInfo, setUserInfo, loading, setLoading];
 }
