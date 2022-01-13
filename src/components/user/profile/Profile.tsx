@@ -31,7 +31,9 @@ export const rows: InfoDays[] = [
   createData('20211201001', '01012345678', '등록', new Date('2021-11-12'), new Date('2022-01-31')),
 ];
 
-export default function Profile() {
+interface ProfileProps {}
+
+const Profile: React.FunctionComponent<ProfileProps> = () => {
   const screenSize = useMediaQuery('(min-width:600px)');
 
   const [membershipDays, setMembershipDays] = React.useState<Date[]>([new Date(), new Date()]);
@@ -56,4 +58,6 @@ export default function Profile() {
       </Stack>
     </Container>
   );
-}
+};
+
+export default Profile;

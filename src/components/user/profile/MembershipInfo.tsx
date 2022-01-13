@@ -1,5 +1,5 @@
-import { Stack, Card, CardHeader, CardContent, Typography, Box } from '@mui/material';
-import React from 'react';
+import * as React from 'react';
+import { Card, CardContent, Typography, Box } from '@mui/material';
 import DateRangeCalendar from './DateRangeCalendar';
 import InfoCard from './InfoCard';
 import InfoTable from './InfoTable';
@@ -13,8 +13,7 @@ export default function MembershipInfo({
   additionalDays: number;
 }) {
   return (
-    <Card component="section" sx={{ border: 'none', boxShadow: 'none', my: 5 }}>
-      <CardHeader>Membership STATS</CardHeader>
+    <Card component="section" sx={{ border: 'none', boxShadow: 'none', my: 3 }}>
       <CardContent>
         <Typography component="h2" variant="h5" sx={{ marginBottom: 1 }}>
           Membership STATS
@@ -23,7 +22,7 @@ export default function MembershipInfo({
           <InfoCard />
         </Box>
 
-        <Card sx={{ marginBottom: 2 }}>
+        <Card sx={{ marginBottom: 4, maxWidth: '630px' }}>
           <DateRangeCalendar
             startDay={membershipDays[0]}
             endDay={membershipDays[1]}
@@ -31,8 +30,8 @@ export default function MembershipInfo({
           />
         </Card>
 
-        <Box sx={{ marginBottom: 5 }}>
-          <Typography component="h3" variant="h6" sx={{ marginBottom: 1 }}>
+        <Box sx={{ marginBottom: 5, maxWidth: '630px' }}>
+          <Typography component="h2" variant="h5" sx={{ marginBottom: 1 }}>
             Register INFO
           </Typography>
           <InfoTable rows={rows} />

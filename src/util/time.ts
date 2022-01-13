@@ -18,4 +18,8 @@ const setFullDateFormat = (date: Date | number) => {
   return format(date, 'yyyy-MM-dd');
 };
 
-export { getSelectedWeek, getClickedDate, setFullDateFormat };
+const setMMddFormat = (startDay: Date) => {
+  return format(startDay, 'MM월 dd일');
+};
+
+export { getSelectedWeek, getClickedDate, setFullDateFormat, setMMddFormat };

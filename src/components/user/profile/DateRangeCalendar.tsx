@@ -1,55 +1,40 @@
 import * as React from 'react';
-import StaticDateRangePicker from '@mui/lab/StaticDateRangePicker';
 
-import { ko } from 'date-fns/locale';
+import { Stack, Typography } from '@mui/material';
+import { DateRangePickerDay, StaticDateRangePicker, LocalizationProvider } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+
+import { differenceInCalendarDays, addDays } from 'date-fns';
+import { ko } from 'date-fns/locale';
 
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { differenceInCalendarDays, addDays } from 'date-fns';
+import { setMMddFormat } from '../../../util/time';
+import { renderDay, dateRangeStyle } from '../../../util/calendar';
 
-import { DateRangePickerDay } from '@mui/lab';
-import { Stack, Typography } from '@mui/material';
-import format from 'date-fns/format';
-import { setFullDateFormat } from '../../../util/time';
-
-export default function DateRangeCalendar({
-  startDay,
-  endDay,
-  additionalDays,
-}: {
+interface DateRangeCalendarProps {
   startDay: Date;
   endDay: Date;
   additionalDays: number;
-}) {
-  React.useEffect(() => {
-    ko!.options!.weekStartsOn = 1;
-  }, []);
+}
+
+const DateRangeCalendar: React.FunctionComponent<DateRangeCalendarProps> = ({
+  startDay,
+  endDay,
+  additionalDays = 0,
+}) => {
+  // React.useEffect(() => {
+  //   ko!.options!.weekStartsOn = 1;
+  // }, []);
 
   const desktop = useMediaQuery('(min-width:740px)');
-  const duringDateString = `남은 회원 기간 : ${differenceInCalendarDays(endDay, new Date())} 일`;
+  const duringDateString = `남은 회원 기간 : ${differenceInCalendarDays(endDay, new Date())} 일 `;
 
   return (
-    <Stack
-      sx={{
-        '& .PrivatePickersToolbar-root': {
-          display: 'none',
-        },
-        '& div[role="presentation"]': {
-          flexFlow: 'row-reverse',
-        },
-        '& .MuiPickerStaticWrapper-root span:nth-of-type(6)': {
-          color: 'blue',
-        },
-        '& .MuiPickerStaticWrapper-root span:nth-of-type(7)': {
-          color: 'red',
-        },
-      }}
-    >
+    <Stack sx={dateRangeStyle}>
       <Stack sx={{ px: 3, mt: 2 }}>
         <Typography component="div">
           <Typography component="span" variant="caption">
-            {duringDateString} +{' '}
+            {duringDateString}
           </Typography>
           <Typography
             component="span"
@@ -58,7 +43,7 @@ export default function DateRangeCalendar({
           >{`연장 ${additionalDays} 일`}</Typography>
         </Typography>
         <Typography component="span" variant="h5" sx={{ my: 2 }}>
-          {format(startDay, 'MM월 dd일')} – {format(addDays(endDay, additionalDays), 'MM월 dd일')}
+          {setMMddFormat(startDay)} – {setMMddFormat(addDays(endDay, additionalDays))}
         </Typography>
       </Stack>
 
@@ -66,44 +51,20 @@ export default function DateRangeCalendar({
         <StaticDateRangePicker
           displayStaticWrapperAs={desktop ? 'desktop' : 'mobile'}
           readOnly
-          toolbarFormat="MM월 dd일"
           value={[startDay, endDay]}
           onChange={() => {}}
           toolbarTitle={duringDateString}
           renderInput={(startProps, endProps) => <React.Fragment></React.Fragment>}
-          renderDay={(date, dateRangePickerDayProps) => {
-            const isPastDay =
-              !dateRangePickerDayProps.outsideCurrentMonth &&
-              differenceInCalendarDays(date, startDay) < 0;
-
-            const isFuture = differenceInCalendarDays(endDay, date) + additionalDays < 0;
-            const isAddDays =
-              differenceInCalendarDays(date, endDay) < 0 &&
-              differenceInCalendarDays(date, endDay) < additionalDays;
-
-            return (
-              <DateRangePickerDay
-                sx={
-                  ((isPastDay || isFuture) && { color: 'gray', opacity: '0.2' }) ||
-                  (dateRangePickerDayProps.today && {
-                    background: '#ffc107',
-                    color: '#fff',
-                    fontWeight: '500',
-                    border: '0 !important',
-                  }) || {
-                    background: isAddDays ? '' : 'lightpink',
-                  }
-                }
-                {...dateRangePickerDayProps}
-              />
-            );
-          }}
+          renderDay={(date, dateRangePickerDayProps) => (
+            <DateRangePickerDay
+              {...dateRangePickerDayProps}
+              sx={renderDay({ date, dateRangePickerDayProps, startDay, endDay, additionalDays })}
+            />
+          )}
         />
       </LocalizationProvider>
     </Stack>
   );
-}
-
-DateRangeCalendar.defaultProps = {
-  additionalDays: 0,
 };
+
+export default DateRangeCalendar;

@@ -60,6 +60,7 @@ function LoginForm({ currentUser, loading, setLoading }: LoginFormProps) {
       setLoading(true);
       try {
         await logoIn(email, password);
+        setLoading(false);
         navigate('/');
       } catch {
         alert('Error!!!');
