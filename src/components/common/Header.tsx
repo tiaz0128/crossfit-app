@@ -1,7 +1,6 @@
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -15,6 +14,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
+import { useMediaQuery } from '@mui/material';
 
 interface Props {
   drawerWidth: number;
@@ -22,6 +22,7 @@ interface Props {
 
 export default function Header({ drawerWidth }: Props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const screenSize = useMediaQuery('(min-width:900px)');
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -32,9 +33,14 @@ export default function Header({ drawerWidth }: Props) {
       <Toolbar />
       <Divider />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+        {['Home', 'Profile', 'WOD'].map((text, index) => (
           <Link to="/profile" key={text}>
-            <ListItem button onClick={handleDrawerToggle}>
+            <ListItem
+              button
+              onClick={() => {
+                if (!screenSize) handleDrawerToggle();
+              }}
+            >
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>

@@ -4,9 +4,10 @@ import MoonLoader from 'react-spinners/MoonLoader';
 
 interface LoadingProps {
   visible: boolean;
+  fixed?: boolean;
 }
 
-const Loading: React.FunctionComponent<LoadingProps> = ({ visible }) => {
+const Loading: React.FunctionComponent<LoadingProps> = ({ visible, fixed }) => {
   if (visible)
     return (
       <Box
@@ -16,6 +17,7 @@ const Loading: React.FunctionComponent<LoadingProps> = ({ visible }) => {
         width="100%"
         height="218px"
         zIndex="5000"
+        sx={fixed ? { position: 'fixed', left: 0, top: '40%' } : {}}
       >
         <MoonLoader size={70} color="#6b5ce7" />
       </Box>

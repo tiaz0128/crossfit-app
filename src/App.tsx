@@ -17,6 +17,7 @@ import Loading from './components/common/Loading';
 import { Link } from 'react-router-dom';
 import Header from './components/common/Header';
 import NotFound from './components/common/NotFound';
+import DashBoard from './components/user/dashboard/DashBoard';
 // import DashBoard from './components/dashboard/DashBoard';
 // import Membership from './components/membership/Membership';
 // import Profile from './components/profile/Profile';
@@ -37,28 +38,30 @@ function App() {
 
   useEffect(() => {
     if (!currentUser) navigate('/login');
+    return;
   }, []);
 
   return (
     <div className="App">
       <CssBaseline />
 
-      <Box sx={(location.pathname !== '/login' && { display: 'flex' }) || {}}>
+      <Box sx={location.pathname !== '/login' ? { display: 'flex' } : {}}>
         {location.pathname !== '/login' && <Header drawerWidth={DRAWER_WIDTH} />}
         <Box
           component="main"
           sx={
-            (location.pathname !== '/login' && {
-              flexGrow: 1,
-              p: 1,
-              mt: 10,
-              width: `calc(100% - ${DRAWER_WIDTH}px)`,
-            }) ||
-            {}
+            location.pathname !== '/login'
+              ? {
+                  flexGrow: 1,
+                  p: 1,
+                  mt: 10,
+                  width: `calc(100% - ${DRAWER_WIDTH}px)`,
+                }
+              : {}
           }
         >
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<DashBoard />} />
             <Route path="member" element={<MemberList />} />
             <Route path="board" element={<BoardList />} />
             <Route path="profile" element={<Profile />} />

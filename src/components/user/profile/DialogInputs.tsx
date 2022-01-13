@@ -16,37 +16,36 @@ import {
   InputLabel,
   OutlinedInput,
   TextField,
-  FormHelperText,
   Box,
   CardMedia,
   Stack,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 
 import { IMaskInput } from 'react-imask';
 
-import ConfirmDialog from './ConfirmDialog';
-import AlertDialog from './AlertDialog';
+import ConfirmDialog from '../../common/ConfirmDialog';
+import AlertDialog from '../../common/AlertDialog';
 
-import { getProfile, setProfile } from '../../../api';
+import { getUserData, putUser, useAuth } from '../../../api/firebase';
+import Loading from '../../common/Loading';
+
+import { ABOUT_MAX_LENGTH } from '../../../util/pattern';
+import { validatePhone, validateTextLength } from '../../../util/validate';
 
 const INIT_PROFILE_INFO = {
   name: '',
   birthday: '',
+  nickName: '',
   userImg: { value: '', change: false },
   phone: { value: '', change: false },
-  password: { value: '', change: false },
   about: { value: '', change: false },
+  infoYn: { value: '', change: false },
 };
-
-const ABOUT_MAX_LENGTH = 300;
-const VALIDATE_PHONE_PATTERN = `^010-[0-9]{3,4}-[0-9]{4}$`;
-
-const PASSWORD_MAX_LENGTH = 16;
-const PASSWORD_MIN_LENGTH = 8;
-const CORRECT_PASSWORD_PATTERN = `^[A-Za-z\\d$@$!%*#?&]{0,${PASSWORD_MAX_LENGTH}}$`;
-const VALIDATE_PASSWORD_PATTERN = `^(?=.*[A-Za-z0-9])(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{${PASSWORD_MIN_LENGTH},${PASSWORD_MAX_LENGTH}}$`;
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -103,25 +102,6 @@ const phoneMaskCustom = React.forwardRef<HTMLElement, any>((props, ref) => {
   );
 });
 
-const passwordMaskCustom = React.forwardRef<HTMLElement, any>((props, ref) => {
-  const { onChange, ...other } = props;
-
-  return (
-    <IMaskInput
-      // eslint-disable-next-line no-octal-escape
-      mask={(value: string) => {
-        const pattern = new RegExp(CORRECT_PASSWORD_PATTERN);
-        return pattern.test(value);
-      }}
-      inputRef={ref}
-      onAccept={(value: any) => {
-        onChange({ target: { name: props.name, value } });
-      }}
-      {...other}
-    />
-  );
-});
-
 const Input = styled('input')({
   display: 'none',
 });
@@ -129,20 +109,22 @@ const Input = styled('input')({
 const createProfileInfo = ({
   name,
   birthday,
+  nickName,
   userImg,
   phone,
-  password,
   about,
+  infoYn,
 }: {
   [key: string]: string;
 }): State => {
   return {
     name,
     birthday,
+    nickName,
     userImg: { value: userImg, change: false },
     phone: { value: phone, change: false },
-    password: { value: password, change: false },
     about: { value: about, change: false },
+    infoYn: { value: infoYn, change: false },
   };
 };
 
@@ -155,68 +137,63 @@ interface State {
   [key: string]: string | InputValue;
   name: string;
   birthday: string;
+  nickName: string;
 
   userImg: InputValue;
   phone: InputValue;
-  password: InputValue;
   about: InputValue;
+  infoYn: InputValue;
 }
 
 export default function DialogInputs({
   open,
   handleClose,
-  userId,
 }: {
   open: boolean;
   handleClose: () => void;
-  userId: string;
 }) {
   const [initData, setInitData] = React.useState<State | null>(null);
   const [profileInfo, setProfileInfo] = React.useState<State>(INIT_PROFILE_INFO);
-  const [confirmPassword, setConfirmPassword] = React.useState<string>('');
 
   const [editPhone, setEditPhone] = React.useState<boolean>(false);
-  const [showPassword, setShowPassword] = React.useState<boolean>(false);
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState<boolean>(false);
 
-  const [openConfirm, setOpenDialog] = React.useState(false);
+  const [openConfirm, setOpenConfirm] = React.useState(false);
   const [openAlter, setOpenAlert] = React.useState<boolean>(false);
 
-  const getInitData = () => {
-    getProfile(userId)
-      .then((data) => {
-        const init = createProfileInfo(data);
-        setInitData(init);
-        setProfileInfo(init);
-        setConfirmPassword('');
-      })
-      .catch((err) => setProfileInfo(INIT_PROFILE_INFO));
-  };
+  const [currentUser, notUse, loading, setLoading] = useAuth();
 
   React.useEffect(() => {
-    if (open) getInitData();
+    if (open) getInitData(currentUser!.uid);
     return () => {
-      setConfirmPassword('');
       setEditPhone(false);
-      setShowPassword(false);
-      setShowConfirmPassword(false);
     };
   }, [open]);
 
+  const getInitData = (uid: string) => {
+    setLoading(true);
+
+    getUserData(uid).then((data) => {
+      setInitData(createProfileInfo(data));
+      setProfileInfo(createProfileInfo(data));
+      setLoading(false);
+    });
+  };
+
   const handleProfileInfo = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const name = e.target.name;
+    let value = e.target.value;
 
-    if (name === 'about' && !validateTextLength(e.target.value, ABOUT_MAX_LENGTH)) return;
+    if (name === 'about' && !validateTextLength(value, ABOUT_MAX_LENGTH)) return;
 
-    if (name === 'password' && isSamePassword(e.target.value, initData!.password.value)) {
-      setConfirmPassword('');
+    if (name === 'infoYn') {
+      value = profileInfo.infoYn.value === 'Y' ? 'N' : 'Y';
     }
 
     setProfileInfo({
       ...profileInfo,
       [e.target.name]: {
-        value: e.target.value,
-        change: e.target.value !== (initData![name] as InputValue).value,
+        value,
+        change: value !== (initData![name] as InputValue).value,
       },
     });
   };
@@ -230,67 +207,51 @@ export default function DialogInputs({
     });
   };
 
-  const handleConfirmPassword = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ): void => setConfirmPassword(e.target.value);
-
   const closeConfirm = () => {
-    setOpenDialog(false);
+    setOpenConfirm(false);
   };
 
   const closeAlter = () => {
     setOpenAlert(false);
   };
 
-  const isSamePassword = (password: string, comparePassword: string) => {
-    return comparePassword === password;
-  };
-
   const isChangeInfo = () => {
-    const { userImg, phone, password, about } = profileInfo;
-    return userImg.change || phone.change || password.change || about.change;
-  };
-
-  const validateChangeInfo = () => {
-    const { value: password, change: changedPassword } = profileInfo.password;
-    if (changedPassword) {
-      return isSamePassword(password, confirmPassword) && validatePassword(password);
-    }
-    return isChangeInfo();
-  };
-
-  const validatePhone = (phone: string) => {
-    var pattern = new RegExp(VALIDATE_PHONE_PATTERN);
-    return pattern.test(phone);
-  };
-
-  const validateTextLength = (value: string, maxLength: number, minLength?: number) => {
-    if (!minLength) return value.length <= maxLength;
-    return value.length >= minLength && value.length <= maxLength;
-  };
-
-  const validatePassword = (password: string) => {
-    const pattern = new RegExp(VALIDATE_PASSWORD_PATTERN);
-    return pattern.test(password);
+    const { userImg, phone, about, infoYn } = profileInfo;
+    return userImg.change || phone.change || about.change || infoYn.change;
   };
 
   const beforeClose = () => {
     if (isChangeInfo()) {
-      return setOpenDialog(true);
+      return setOpenConfirm(true);
     }
     handleClose();
   };
 
   const resetAllChange = (change: boolean) => {
-    let { userImg, phone, password, about } = profileInfo;
+    let { userImg, phone, about, infoYn } = profileInfo;
     userImg = { ...userImg, change };
     phone = { ...phone, change };
-    password = { ...password, change };
     about = { ...about, change };
+    infoYn = { ...infoYn, change };
 
-    return { ...profileInfo, userImg, phone, password, about };
+    return { ...profileInfo, userImg, phone, about, infoYn };
   };
 
+  if (loading) return <Loading visible={loading} fixed />;
+
+  const handleOnSave = async () => {
+    const { name, birthday, userImg, phone, about, infoYn } = profileInfo;
+    await putUser(currentUser!.uid, {
+      name,
+      birthday,
+      userImg: userImg.value,
+      phone: phone.value,
+      about: about.value,
+      infoYn: infoYn.value,
+    });
+    setProfileInfo(resetAllChange(false));
+    setOpenAlert(true);
+  };
   return (
     <Box>
       <BootstrapDialog
@@ -365,13 +326,13 @@ export default function DialogInputs({
                 value={profileInfo.name}
               />
               <TextField
-                id="userId"
-                name="userId"
-                label="아이디"
+                id="nickName"
+                name="nickName"
+                label="닉네임"
                 variant="outlined"
                 disabled
                 fullWidth
-                value={userId}
+                value={profileInfo.nickName}
               />
             </Stack>
             <TextField
@@ -420,85 +381,29 @@ export default function DialogInputs({
                 }
               />
             </FormControl>
-            <FormControl fullWidth variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-              <OutlinedInput
-                id="password"
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                value={profileInfo.password.value}
-                error={!validatePassword(profileInfo.password.value)}
-                onChange={handleProfileInfo}
-                inputComponent={passwordMaskCustom}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setShowPassword(!showPassword)}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
+            <FormGroup sx={{ mb: 3 }}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={profileInfo.infoYn.value === 'Y'}
+                    name="infoYn"
+                    onChange={handleProfileInfo}
+                  />
                 }
-                label="Password"
+                label="정보공개 (나이 / 등수)"
               />
-              <FormHelperText id="outlined-weight-helper-text" sx={{ color: 'error.main' }}>
-                {!validatePassword(profileInfo.password.value) &&
-                  '대소문자/숫자/특수문자 2가지 이상 조합. 8~16'}
-              </FormHelperText>
-            </FormControl>
-            <FormControl fullWidth variant="outlined">
-              <InputLabel
-                error={
-                  profileInfo.password.change &&
-                  !isSamePassword(profileInfo.password.value, confirmPassword)
-                }
-                htmlFor="outlined-adornment-password"
-              >
-                Password Confirm
-              </InputLabel>
-              <OutlinedInput
-                id="confirmPassword"
-                name="confirmPassword"
-                type={showConfirmPassword ? 'text' : 'password'}
-                value={confirmPassword}
-                disabled={!profileInfo.password.change}
-                error={!isSamePassword(profileInfo.password.value, confirmPassword)}
-                onChange={handleConfirmPassword}
-                inputComponent={passwordMaskCustom}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      disabled={!profileInfo.password.change}
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      edge="end"
-                    >
-                      {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="confirmPassword"
-              />
-              {profileInfo.password.change && (
-                <FormHelperText id="outlined-weight-helper-text" sx={{ color: 'error.main' }}>
-                  {!isSamePassword(profileInfo.password.value, confirmPassword) &&
-                    'not matched password'}
-                </FormHelperText>
-              )}
-            </FormControl>
+            </FormGroup>
             <TextField
               id="about"
               name="about"
               label="about"
-              placeholder={profileInfo.about.value || '자기소개를 해보세요!'}
+              placeholder={'자기소개를 해보세요!'}
               multiline
               rows={5}
               error={!validateTextLength(profileInfo.about.value, ABOUT_MAX_LENGTH)}
               helperText={
                 !validateTextLength(profileInfo.about.value, ABOUT_MAX_LENGTH) &&
-                '300글자 이하로 입려하세요'
+                `${ABOUT_MAX_LENGTH}글자 이하로 입려하세요`
               }
               variant="filled"
               fullWidth
@@ -510,22 +415,10 @@ export default function DialogInputs({
           <DialogActions>
             <Button
               autoFocus
-              onClick={async () => {
-                const { name, birthday, userImg, phone, password, about } = profileInfo;
-                await setProfile(userId, {
-                  name,
-                  birthday,
-                  userImg: userImg.value,
-                  phone: phone.value,
-                  password: password.value,
-                  about: about.value,
-                });
-                setProfileInfo(resetAllChange(false));
-                setOpenAlert(true);
-              }}
-              disabled={!validateChangeInfo()}
+              onClick={handleOnSave}
+              disabled={!isChangeInfo()}
               sx={{
-                cursor: validateChangeInfo() ? 'cursor' : 'not-allowed',
+                cursor: isChangeInfo() ? 'cursor' : 'not-allowed',
               }}
             >
               Save changes
@@ -537,16 +430,15 @@ export default function DialogInputs({
         openConfirm={openConfirm}
         confirmTitle={'변경'}
         confirmDescription={'변경된 데이터가 있습니다. 저장하지 않고 닫겠습니까?'}
-        closeConfirm={closeConfirm}
-        handleClose={handleClose}
+        handleCloseConfirm={closeConfirm}
+        handleCloseParent={handleClose}
       />
 
       <AlertDialog
-        alertTitle="알림"
-        alertDescription="저장 되었습니다."
+        alertTitle={'알림'}
+        alertDescription={'저장 되었습니다.'}
         openAlter={openAlter}
-        getSavedData={getInitData}
-        closeAlter={closeAlter}
+        handleCloseAlter={closeAlter}
       />
     </Box>
   );

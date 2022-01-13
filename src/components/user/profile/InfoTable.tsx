@@ -23,7 +23,7 @@ interface InfoDays {
 export default function InfoTable({ rows }: { rows: InfoDays[] }) {
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 350 }} aria-label="simple table">
+      <Table sx={{ minWidth: 340, maxWidth: 600 }} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell align="center">종류</TableCell>

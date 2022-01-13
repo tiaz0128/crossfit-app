@@ -2,7 +2,16 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 
-import { getFirestore, collection, query, getDocs, where } from 'firebase/firestore';
+import {
+  getFirestore,
+  collection,
+  query,
+  getDocs,
+  where,
+  doc,
+  addDoc,
+  setDoc,
+} from 'firebase/firestore';
 import {
   getAuth,
   onAuthStateChanged,
@@ -44,8 +53,31 @@ export async function getUserData(uid: string) {
   const q = query(collectionRef, where('uid', '==', uid));
 
   const snapshot = await getDocs(q);
-  const member = snapshot.docs.map((doc: any) => ({ ...doc.data() }))[0];
+  const member = snapshot.docs.map((memberDoc: any) => ({ ...memberDoc.data() }))[0];
   return member;
+}
+
+export async function postUser(payload: any) {
+  const collectionRef = collection(db, 'member');
+
+  try {
+    await addDoc(collectionRef, payload);
+  } catch {
+    alert('Error');
+  }
+}
+
+export async function putUser(uid: string, payload: any) {
+  const collectionRef = collection(db, 'member');
+  const q = query(collectionRef, where('uid', '==', uid));
+  const snapshot = await getDocs(q);
+  const targetDoc = snapshot.docs[0].id;
+
+  try {
+    await setDoc(doc(db, 'member', targetDoc), payload, { merge: true });
+  } catch {
+    alert('Error');
+  }
 }
 
 export function useAuth(): [
@@ -58,8 +90,6 @@ export function useAuth(): [
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log(auth.currentUser);
-
     const unSub = onAuthStateChanged(auth, (user: User | null) => {
       setUserInfo(user);
       setLoading(false);

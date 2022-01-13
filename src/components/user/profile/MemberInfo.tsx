@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import * as React from 'react';
 import {
   Stack,
   Card,
@@ -9,60 +9,24 @@ import {
   Divider,
   Grid,
   Box,
-  Input,
-  InputAdornment,
 } from '@mui/material';
 
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import SettingsApplicationsRoundedIcon from '@mui/icons-material/SettingsApplicationsRounded';
+
 import DialogInputs from './DialogInputs';
-import { IMaskInput } from 'react-imask';
-
-const numberRecordMaskCustom = React.forwardRef<HTMLElement, any>((props, ref) => {
-  const { onChange, ...other } = props;
-
-  return (
-    <IMaskInput
-      // eslint-disable-next-line no-octal-escape
-      mask="000"
-      inputRef={ref}
-      onAccept={(value: any) => {
-        onChange({ target: { name: props.name, value } });
-      }}
-      {...other}
-    />
-  );
-});
-
-const timeRecordMaskCustom = React.forwardRef<HTMLElement, any>((props, ref) => {
-  const { onChange, ...other } = props;
-
-  return (
-    <IMaskInput
-      // eslint-disable-next-line no-octal-escape
-      mask="0[0]:00"
-      inputRef={ref}
-      onAccept={(value: any) => {
-        onChange({ target: { name: props.name, value } });
-      }}
-      {...other}
-    />
-  );
-});
-
-MemberInfo.defaultProps = {
-  enableEdit: false,
-};
+import NumberRecordInput from '../../common/form/NumberRecordInput';
+import TimeRecordInput from '../../common/form/TimeRecordInput';
 
 export default function MemberInfo({
   mobile,
-  enableEdit,
+  enableEdit = false,
 }: {
   mobile: boolean;
   enableEdit?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
-  const [edit, setEdit] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [edit, setEdit] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -133,7 +97,7 @@ export default function MemberInfo({
           </Box>
         </Stack>
 
-        <DialogInputs open={open} handleClose={handleClose} userId="tiaz0128" />
+        <DialogInputs open={open} handleClose={handleClose} />
 
         <Stack px={2} mt={-1}>
           <Stack direction="row" alignItems="flex-end">
@@ -191,14 +155,10 @@ export default function MemberInfo({
                   Back Squat
                 </Typography>
                 {edit ? (
-                  <Input
-                    inputComponent={numberRecordMaskCustom}
-                    endAdornment={<InputAdornment position="end">kg</InputAdornment>}
-                    sx={{ width: '55px' }}
-                  ></Input>
+                  <NumberRecordInput unit="kg" />
                 ) : (
                   <Typography component="span" variant="subtitle1">
-                    150 kg
+                    150 <span>kg</span>
                   </Typography>
                 )}
               </Stack>
@@ -220,8 +180,6 @@ export default function MemberInfo({
                   87 kg
                 </Typography>
               </Stack>
-
-              <Typography variant="subtitle1"></Typography>
             </Grid>
 
             {mobile ? (
@@ -236,11 +194,7 @@ export default function MemberInfo({
                   Fran
                 </Typography>
                 {edit ? (
-                  <Input
-                    placeholder="00:00"
-                    inputComponent={timeRecordMaskCustom}
-                    sx={{ width: '42px' }}
-                  ></Input>
+                  <TimeRecordInput />
                 ) : (
                   <Typography component="span" variant="subtitle1">
                     2:13
