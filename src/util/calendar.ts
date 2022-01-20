@@ -41,6 +41,7 @@ const dateRangeStyle = {
   },
   '& div[role="presentation"]': {
     flexFlow: 'row-reverse',
+    fontWeight: 600,
   },
   '& .MuiPickerStaticWrapper-root span:nth-of-type(7)': {
     color: 'blue',

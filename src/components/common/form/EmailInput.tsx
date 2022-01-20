@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FormControl, InputLabel, OutlinedInput } from '@mui/material';
 import { IMaskInput } from 'react-imask';
-import { CORRECT_EMAIL_PATTERN } from '../../../util/pattern';
+import { CORRECT_EMAIL_PATTERN } from '../../../constants/pattern';
 
 const emailMaskCustom = React.forwardRef<HTMLElement, any>((props, ref) => {
   const { onChange, ...other } = props;

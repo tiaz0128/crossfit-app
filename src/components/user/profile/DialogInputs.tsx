@@ -34,8 +34,10 @@ import AlertDialog from '../../common/AlertDialog';
 import { getUserData, putUser, useAuth } from '../../../api/firebase';
 import Loading from '../../common/Loading';
 
-import { ABOUT_MAX_LENGTH } from '../../../util/pattern';
+import { ABOUT_MAX_LENGTH } from '../../../constants/pattern';
 import { validatePhone, validateTextLength } from '../../../util/validate';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../modules';
 
 const INIT_PROFILE_INFO = {
   name: '',
@@ -160,7 +162,8 @@ export default function DialogInputs({
   const [openConfirm, setOpenConfirm] = React.useState(false);
   const [openAlter, setOpenAlert] = React.useState<boolean>(false);
 
-  const [currentUser, notUse, loading, setLoading] = useAuth();
+  const currentUser = useSelector((state: RootState) => state.currentUser);
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     if (open) getInitData(currentUser!.uid);

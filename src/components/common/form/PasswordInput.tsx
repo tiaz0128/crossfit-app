@@ -2,7 +2,7 @@ import * as React from 'react';
 import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { IMaskInput } from 'react-imask';
-import { CORRECT_PASSWORD_PATTERN } from '../../../util/pattern';
+import { CORRECT_PASSWORD_PATTERN } from '../../../constants/pattern';
 
 const passwordMaskCustom = React.forwardRef<HTMLElement, any>((props, ref) => {
   const { onChange, ...other } = props;

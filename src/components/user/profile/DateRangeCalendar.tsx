@@ -22,9 +22,9 @@ const DateRangeCalendar: React.FunctionComponent<DateRangeCalendarProps> = ({
   endDay,
   additionalDays = 0,
 }) => {
-  // React.useEffect(() => {
-  //   ko!.options!.weekStartsOn = 1;
-  // }, []);
+  React.useEffect(() => {
+    ko!.options!.weekStartsOn = 0;
+  }, []);
 
   const desktop = useMediaQuery('(min-width:740px)');
   const duringDateString = `남은 회원 기간 : ${differenceInCalendarDays(endDay, new Date())} 일 `;
@@ -34,7 +34,7 @@ const DateRangeCalendar: React.FunctionComponent<DateRangeCalendarProps> = ({
       <Stack sx={{ px: 3, mt: 2 }}>
         <Typography component="div">
           <Typography component="span" variant="caption">
-            {duringDateString}
+            {duringDateString} +{' '}
           </Typography>
           <Typography
             component="span"
