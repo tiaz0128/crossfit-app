@@ -1,27 +1,6 @@
-import { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
-
-import {
-  getFirestore,
-  collection,
-  query,
-  getDocs,
-  where,
-  doc,
-  addDoc,
-  setDoc,
-} from 'firebase/firestore';
-import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-  User,
-  setPersistence,
-  browserSessionPersistence,
-} from 'firebase/auth';
-import { useDispatch } from 'react-redux';
-import { loginUser } from '../modules/currentUser';
+import { getFirestore } from 'firebase/firestore';
+import { getAuth, setPersistence, browserSessionPersistence } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -33,64 +12,7 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_APP_ID,
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth();
+export const app = initializeApp(firebaseConfig);
+export const db = getFirestore();
+export const auth = getAuth();
 setPersistence(auth, browserSessionPersistence);
-const db = getFirestore();
-
-export function logoIn(email: string, password: string) {
-  return signInWithEmailAndPassword(auth, email, password);
-}
-
-export function logoOut() {
-  return signOut(auth);
-}
-
-export async function getUserData(uid: string) {
-  const collectionRef = collection(db, 'member');
-  const q = query(collectionRef, where('uid', '==', uid));
-
-  const snapshot = await getDocs(q);
-  const member = snapshot.docs.map((memberDoc: any) => ({ ...memberDoc.data() }))[0];
-  return member;
-}
-
-export async function postUser(payload: any) {
-  const collectionRef = collection(db, 'member');
-
-  try {
-    await addDoc(collectionRef, payload);
-  } catch {
-    alert('Error');
-  }
-}
-
-export async function putUser(uid: string, payload: any) {
-  const collectionRef = collection(db, 'member');
-  const q = query(collectionRef, where('uid', '==', uid));
-  const snapshot = await getDocs(q);
-  const targetDoc = snapshot.docs[0].id;
-
-  try {
-    await setDoc(doc(db, 'member', targetDoc), payload, { merge: true });
-  } catch {
-    alert('Error');
-  }
-}
-
-export function useAuth(): [boolean, React.Dispatch<React.SetStateAction<boolean>>] {
-  // const [userInfo, setUserInfo] = useState<User>({} as User);
-  const [loading, setLoading] = useState(true);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const unSub = onAuthStateChanged(auth, (user: User | null) => {
-      if (user) dispatch(loginUser(user));
-      // setUserInfo(user);
-      setLoading(false);
-    });
-    return unSub;
-  }, []);
-
-  return [loading, setLoading];
-}

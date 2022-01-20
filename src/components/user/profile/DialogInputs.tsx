@@ -31,13 +31,13 @@ import { IMaskInput } from 'react-imask';
 import ConfirmDialog from '../../common/ConfirmDialog';
 import AlertDialog from '../../common/AlertDialog';
 
-import { getUserData, putUser, useAuth } from '../../../api/firebase';
 import Loading from '../../common/Loading';
 
 import { ABOUT_MAX_LENGTH } from '../../../constants/pattern';
 import { validatePhone, validateTextLength } from '../../../util/validate';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../modules';
+import { getUserData, putUser } from '../../../api/profile';
 
 const INIT_PROFILE_INFO = {
   name: '',

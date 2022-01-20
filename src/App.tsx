@@ -1,55 +1,49 @@
-import { Box, CssBaseline } from '@mui/material';
-import React, { useEffect, useRef } from 'react';
-import { useState } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { appTitle } from './appTitle';
-// import Header from './components/admin/header/Header';
-import Home from './components/admin/home/Home';
-import Navigation from './components/admin/navigation/Navigation';
-import BoardList from './components/admin/boardManagement/BoardList';
-import styles from './components/Main.module.css';
-import MemberList from './components/admin/memberManagement/MemberList';
+import React, { useEffect } from 'react';
 import './App.css';
+import { Box, CssBaseline } from '@mui/material';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+
+import BoardList from './components/admin/boardManagement/BoardList';
+import MemberList from './components/admin/memberManagement/MemberList';
+
 import Profile from './components/user/profile/Profile';
 import LoginForm from './components/common/login/LoginForm';
-import { useAuth } from './api/firebase';
-import Loading from './components/common/Loading';
-import { Link } from 'react-router-dom';
+
 import Header from './components/common/Header';
 import NotFound from './components/common/NotFound';
 import DashBoard from './components/user/dashboard/DashBoard';
 import LandingPage from './components/common/LandingPage';
-import { useDispatch, useSelector } from 'react-redux';
-// import DashBoard from './components/dashboard/DashBoard';
-// import Membership from './components/membership/Membership';
-// import Profile from './components/profile/Profile';
 
-import { RootState } from './modules';
 import { MEMBER_MENUS } from './constants/menuList';
+import useAuth from './hooks/useAuth';
+import Loading from './components/common/Loading';
 
 const DRAWER_WIDTH = 200;
 
 function App() {
-  const currentUser = useSelector((state: RootState) => state.currentUser);
+  const { currentUser, loading } = useAuth();
 
-  let location = useLocation();
+  let { pathname } = useLocation();
   let navigate = useNavigate();
 
+  useEffect(() => {
+    if (currentUser) return;
+    if (!currentUser && loginUserMenu()) navigate('/', { replace: true });
+  }, [pathname, currentUser]);
+
   const showHeader = () => {
-    return !['/login'].includes(location.pathname);
+    return !['/login'].includes(pathname);
   };
 
-  useEffect(() => {
-    console.log(currentUser);
-
-    if (currentUser) return;
-    if (!currentUser && MEMBER_MENUS.find(({ path }) => '/' + path === location.pathname))
-      navigate('/', { replace: true });
-  }, [location.pathname, currentUser]);
+  const loginUserMenu = () => {
+    return MEMBER_MENUS.find(({ path }) => '/' + path === pathname);
+  };
 
   return (
     <div className="App">
       <CssBaseline />
+
+      {!currentUser && <Loading visible={loading} fixed bgcolor />}
 
       {showHeader() ? (
         <Box sx={{ display: 'flex' }}>

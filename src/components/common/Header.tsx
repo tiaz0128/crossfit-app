@@ -13,14 +13,13 @@ import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Link } from 'react-router-dom';
-import { Button, Stack, useMediaQuery } from '@mui/material';
+
+import { Avatar, Button, Menu, MenuItem, Stack } from '@mui/material';
 import { NavLink } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../modules';
 import { GUEST_MENUS, MEMBER_MENUS } from '../../constants/menuList';
-import { logoOut } from '../../api/firebase';
-import { logoutUser } from '../../modules/currentUser';
+
+import useAuth from '../../hooks/useAuth';
+import { AccountCircle } from '@mui/icons-material';
 
 interface Props {
   drawerWidth: number;
@@ -28,26 +27,25 @@ interface Props {
 
 export default function Header({ drawerWidth }: Props) {
   const [open, setOpen] = React.useState(false);
-  // const screenSize = useMediaQuery('(min-width:900px)');
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const { currentUser, handleLogout } = useAuth();
 
-  const handleDrawerToggle = () => {
-    setOpen(!open);
+  const handleDrawerToggle = () => setOpen(!open);
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  const currentUser = useSelector((state: RootState) => state.currentUser);
-  const dispatch = useDispatch();
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-  const memberPath = () => {
+  const renderMenus = () => {
     const menus = currentUser ? MEMBER_MENUS : GUEST_MENUS;
 
     return menus.map(({ name, path }, index) => (
       <NavLink to={path} key={path} style={{ textDecoration: 'none' }}>
-        <ListItem
-          button
-          onClick={() => {
-            handleDrawerToggle();
-          }}
-        >
+        <ListItem button onClick={handleDrawerToggle}>
           <ListItemIcon sx={{ minWidth: '32px' }}>
             {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
           </ListItemIcon>
@@ -62,7 +60,7 @@ export default function Header({ drawerWidth }: Props) {
       <Box>
         <Toolbar />
         <Divider />
-        <List>{memberPath()}</List>
+        <List>{renderMenus()}</List>
       </Box>
       <Box display="flex" justifyContent={'center'} mt="auto">
         {currentUser ? (
@@ -71,8 +69,7 @@ export default function Header({ drawerWidth }: Props) {
             color="secondary"
             fullWidth
             onClick={async () => {
-              await logoOut();
-              dispatch(logoutUser());
+              handleLogout();
               handleDrawerToggle();
             }}
           >
@@ -105,6 +102,47 @@ export default function Header({ drawerWidth }: Props) {
           <Typography variant="h6" noWrap component="div" m="0 auto">
             Crossfit 백호
           </Typography>
+          {currentUser ? (
+            <div>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <Avatar alt="Remy Sharp" src="img/profile.jpg" />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+                sx={{ mt: 4 }}
+              >
+                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={() => handleLogout()}>logout</MenuItem>
+              </Menu>
+            </div>
+          ) : (
+            <div>
+              <NavLink to="/login" style={{ textDecoration: 'none', width: '100%' }}>
+                <Button disableRipple={true} sx={{ color: '#fff' }}>
+                  login
+                </Button>
+              </NavLink>
+            </div>
+          )}
         </Toolbar>
       </AppBar>
       <Box component="nav" sx={{ flexShrink: { md: 0 } }} aria-label="mailbox folders">

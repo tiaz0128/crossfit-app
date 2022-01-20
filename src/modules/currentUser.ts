@@ -1,5 +1,7 @@
 import { User } from 'firebase/auth';
 
+export type CurrentUser = User | null;
+
 const LOGIN_USER = 'currentUser/LOGIN_USER' as const;
 const LOGOUT_USER = 'currentUser/LOGOUT_USER' as const;
 
@@ -11,7 +13,7 @@ type CurrentUserAction = ReturnType<typeof loginUser> | ReturnType<typeof logout
 const initialState = null;
 
 // eslint-disable-next-line @typescript-eslint/default-param-last
-export default function currentUser(state: User | null = initialState, action: CurrentUserAction) {
+export default function currentUser(state: CurrentUser = initialState, action: CurrentUserAction) {
   switch (action.type) {
     case LOGIN_USER:
       return { ...action.user };
