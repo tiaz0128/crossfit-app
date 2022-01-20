@@ -10,7 +10,10 @@ import EmailInput from '../form/EmailInput';
 import PasswordInputProps from '../form/PasswordInput';
 import Loading from '../Loading';
 
-import { logoIn, logoOut } from '../../../api/firebase';
+import { logoIn, logoOut, useAuth } from '../../../api/firebase';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../modules';
+import { loginUser, logoutUser } from '../../../modules/currentUser';
 
 const MainContainer = styled('main')(({ theme }) => ({
   display: 'flex',
@@ -40,28 +43,34 @@ const BackgroundBox = styled('div')(({ theme }) => ({
 }));
 
 interface LoginFormProps {
-  currentUser: User | null;
-  loading: boolean;
-  setLoading: (value: boolean) => void;
+  // currentUser: User | null;
+  // loading: boolean;
+  // setLoading: (value: boolean) => void;
 }
-
-function LoginForm({ currentUser, loading, setLoading }: LoginFormProps) {
+// { currentUser, loading, setLoading }: LoginFormProps}
+function LoginForm() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+  // const [currentUser, loading, setLoading] = useAuth();
+
+  const currentUser: User = useSelector((state: RootState) => state.currentUser as User);
+  const dispatch = useDispatch();
 
   let navigate = useNavigate();
 
   // React.useEffect(() => {
-  //   if (currentUser) navigate('/');
+  //   if (currentUser) navigate('/dashboard');
   // }, [currentUser]);
 
   const handleLogin = async () => {
     if (email && password) {
       setLoading(true);
       try {
-        await logoIn(email, password);
+        const UserImpl = await logoIn(email, password);
+        dispatch(loginUser(UserImpl.user));
         setLoading(false);
-        navigate('/');
+        navigate('/dashboard');
       } catch {
         alert('Error!!!');
       }
@@ -73,6 +82,7 @@ function LoginForm({ currentUser, loading, setLoading }: LoginFormProps) {
     setLoading(true);
     try {
       await logoOut();
+      dispatch(logoutUser());
     } catch {
       alert('로그아웃 에러 발생!!');
     }

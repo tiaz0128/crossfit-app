@@ -18,63 +18,70 @@ import { Link } from 'react-router-dom';
 import Header from './components/common/Header';
 import NotFound from './components/common/NotFound';
 import DashBoard from './components/user/dashboard/DashBoard';
+import LandingPage from './components/common/LandingPage';
+import { useDispatch, useSelector } from 'react-redux';
 // import DashBoard from './components/dashboard/DashBoard';
 // import Membership from './components/membership/Membership';
 // import Profile from './components/profile/Profile';
 
+import { RootState } from './modules';
+import { MEMBER_MENUS } from './constants/menuList';
+
 const DRAWER_WIDTH = 200;
 
 function App() {
-  const [selectedPage, setSelectedPage] = useState(false);
-
-  const handleSelectedPage = () => {
-    setSelectedPage(true);
-  };
-
-  const [currentUser, setCurrentUser, loading, setLoading] = useAuth();
+  const currentUser = useSelector((state: RootState) => state.currentUser);
 
   let location = useLocation();
   let navigate = useNavigate();
 
+  const showHeader = () => {
+    return !['/login'].includes(location.pathname);
+  };
+
   useEffect(() => {
-    if (!currentUser) navigate('/login');
-    return;
-  }, []);
+    console.log(currentUser);
+
+    if (currentUser) return;
+    if (!currentUser && MEMBER_MENUS.find(({ path }) => '/' + path === location.pathname))
+      navigate('/', { replace: true });
+  }, [location.pathname, currentUser]);
 
   return (
     <div className="App">
       <CssBaseline />
 
-      <Box sx={location.pathname !== '/login' ? { display: 'flex' } : {}}>
-        {location.pathname !== '/login' && <Header drawerWidth={DRAWER_WIDTH} />}
-        <Box
-          component="main"
-          sx={
-            location.pathname !== '/login'
-              ? {
-                  flexGrow: 1,
-                  p: 1,
-                  mt: 10,
-                  width: `calc(100% - ${DRAWER_WIDTH}px)`,
-                }
-              : {}
-          }
-        >
-          <Routes>
-            <Route path="/" element={<DashBoard />} />
-            <Route path="member" element={<MemberList />} />
-            <Route path="board" element={<BoardList />} />
-            <Route path="profile" element={<Profile />} />
-            <Route
-              path="login"
-              element={
-                <LoginForm currentUser={currentUser} loading={loading} setLoading={setLoading} />
-              }
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+      {showHeader() ? (
+        <Box sx={{ display: 'flex' }}>
+          <Header drawerWidth={DRAWER_WIDTH} />
+          <Box
+            component="main"
+            sx={{
+              flexGrow: 1,
+              p: 1,
+              mt: 10,
+              width: `calc(100% - ${DRAWER_WIDTH}px)`,
+            }}
+          >
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/dashboard" element={<DashBoard />} />
+              <Route path="member" element={<MemberList />} />
+              <Route path="board" element={<BoardList />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Box>
         </Box>
-      </Box>
+      ) : (
+        <Box>
+          <Box component="main">
+            <Routes>
+              <Route path="login" element={<LoginForm />} />
+            </Routes>
+          </Box>
+        </Box>
+      )}
 
       {/* <section className={styles.container}>
         <div className={styles.meun}>

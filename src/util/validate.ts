@@ -1,4 +1,4 @@
-import { VALIDATE_PHONE_PATTERN, VALIDATE_PASSWORD_PATTERN } from './pattern';
+import { VALIDATE_PHONE_PATTERN, VALIDATE_PASSWORD_PATTERN } from '../constants/pattern';
 
 const isSamePassword = (password: string, comparePassword: string) => {
   return comparePassword === password;

@@ -1,5 +1,6 @@
 import { CardMedia, List, Stack, Typography } from '@mui/material';
 import * as React from 'react';
+import imgBg from '../../asset/img/no-rep-bg.jpg';
 
 interface NotFoundProps {}
 
@@ -23,9 +24,9 @@ const NotFound: React.FunctionComponent<NotFoundProps> = () => {
             left: 0,
           },
         }}
-        image={'img/no-rep-bg.jpg'}
+        image={imgBg}
       />
-      <List sx={{ color: '#fff', textAlign: 'center', mt: 5 }}>
+      <List sx={{ color: '#fff', textAlign: 'center', mt: '200px' }}>
         <Typography component="h1" variant="h4">
           SORRY, THAT'S A "NO&nbsp;REP!"
         </Typography>

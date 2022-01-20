@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 
@@ -21,6 +20,8 @@ import {
   setPersistence,
   browserSessionPersistence,
 } from 'firebase/auth';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../modules/currentUser';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -38,9 +39,6 @@ setPersistence(auth, browserSessionPersistence);
 const db = getFirestore();
 
 export function logoIn(email: string, password: string) {
-  //   return setPersistence(auth, browserSessionPersistence).then(() =>
-  //     signInWithEmailAndPassword(auth, email, password)
-  //   );
   return signInWithEmailAndPassword(auth, email, password);
 }
 
@@ -80,29 +78,19 @@ export async function putUser(uid: string, payload: any) {
   }
 }
 
-export function useAuth(): [
-  User | null,
-  React.Dispatch<React.SetStateAction<User | null>>,
-  boolean,
-  React.Dispatch<React.SetStateAction<boolean>>
-] {
-  const [userInfo, setUserInfo] = useState<User | null>(null);
+export function useAuth(): [boolean, React.Dispatch<React.SetStateAction<boolean>>] {
+  // const [userInfo, setUserInfo] = useState<User>({} as User);
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, (user: User | null) => {
-      setUserInfo(user);
+      if (user) dispatch(loginUser(user));
+      // setUserInfo(user);
       setLoading(false);
     });
     return unSub;
   }, []);
 
-  // useEffect(() => {
-  //   let t: null | NodeJS.Timeout = null;
-  //   if (loading) t = setTimeout(() => setLoading(false), 800);
-
-  //   return () => clearTimeout(t as NodeJS.Timeout);
-  // }, [loading]);
-
-  return [userInfo, setUserInfo, loading, setLoading];
+  return [loading, setLoading];
 }
