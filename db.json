@@ -15,5 +15,165 @@
       "file": "C:\\fakepath\\라이언.PNG",
       "id": 2
     }
+  ],
+  "checkDays": [
+    {
+      "id": 2021,
+      "checkDayOfMonth": [
+        [
+          1,
+          2,
+          6,
+          30
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          1,
+          2,
+          6
+        ],
+        [
+          1,
+          2,
+          6
+        ],
+        [
+          1,
+          2,
+          6
+        ],
+        [
+          6
+        ],
+        [
+          1,
+          2,
+          6
+        ],
+        [
+          1,
+          2,
+          6
+        ],
+        [
+          1,
+          2,
+          6
+        ],
+        [
+          20,
+          23
+        ],
+        [
+          12,
+          30
+        ],
+        [
+          11,
+          12,
+          30
+        ]
+      ]
+    }
+  ],
+  "wodInfo": [
+    {
+      "id": "2021-12-20",
+      "teamWod": 1,
+      "timeCap": "",
+      "option": "For time 50-40-30-20-10",
+      "workOut": {
+        "buyIn": "",
+        "main": [
+          "Push Up",
+          "Sit Up",
+          "Air Squat",
+          "sec Hollow Hold"
+        ],
+        "buyOut": ""
+      },
+      "hero": ""
+    },
+    {
+      "id": "2021-12-21",
+      "teamWod": 1,
+      "timeCap": "12",
+      "option": "AMRAP ",
+      "workOut": {
+        "buyIn": "",
+        "main": [
+          "12 Thruster (95/65)",
+          "12 Burpee"
+        ],
+        "buyOut": ""
+      },
+      "hero": ""
+    },
+    {
+      "id": "2021-12-22",
+      "teamWod": 2,
+      "timeCap": "22",
+      "option": "AMRAP",
+      "workOut": {
+        "buyIn": "",
+        "main": [
+          "40 Pull up",
+          "10 Team Burpee",
+          "40 Hang Power Snatch (95/65)",
+          "10 Team Burpee",
+          "40 Push Press(95/65)",
+          "10 Team Burpee"
+        ],
+        "buyOut": ""
+      },
+      "hero": ""
+    },
+    {
+      "id": "2021-12-23",
+      "teamWod": 1,
+      "timeCap": "15(45on/15off)",
+      "option": "EMOM",
+      "workOut": {
+        "buyIn": "",
+        "main": [
+          "A: Cal Row",
+          "B: Squat Clean(165/115)",
+          "C: T.T.B"
+        ],
+        "buyOut": ""
+      },
+      "hero": ""
+    },
+    {
+      "id": "2021-12-24",
+      "teamWod": 1,
+      "timeCap": "",
+      "option": "6 Rounds for time",
+      "workOut": {
+        "buyIn": "",
+        "main": [
+          "25 American KB Swings(24/16kg)",
+          "12 KB Goblet Squats(24/16kg)",
+          "250m meter Row",
+          "Rest 1 minute between rounds"
+        ],
+        "buyOut": ""
+      },
+      "hero": "EAST ATLANTA SANTA"
+    }
+  ],
+  "profile": [
+    {
+      "name": "주환석",
+      "birthday": "1987-10-17",
+      "userImg": "blob:http://localhost:3000/2d9e1f5c-6fb9-4a17-a0b6-9eee394e0dfa",
+      "phone": "010-1234-1234",
+      "password": "qwer123!1",
+      "about": "",
+      "id": "tiaz0128"
+    }
   ]
 }

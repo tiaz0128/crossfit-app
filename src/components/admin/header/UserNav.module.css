@@ -1,0 +1,24 @@
+.items {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 10%;
+    flex: 1 1 35%;
+}
+
+.item {
+    background: transparent;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.item:hover {
+    background: #f53b57;
+    box-shadow: 0 5px 10px #f53b5799; 
+}
+
+.item:hover svg{ 
+    color: #fff !important;
+}

@@ -1,0 +1,12 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+}
+ 
+
+.serch {
+    display: flex;
+    justify-content: flex-end; 
+}
