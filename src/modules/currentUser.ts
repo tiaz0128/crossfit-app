@@ -1,3 +1,4 @@
+import { setCurrentUserUidLocalStorage } from './../util/storage';
 import { User } from 'firebase/auth';
 
 export type CurrentUser = User | null;
@@ -16,8 +17,10 @@ const initialState = null;
 export default function currentUser(state: CurrentUser = initialState, action: CurrentUserAction) {
   switch (action.type) {
     case LOGIN_USER:
+      setCurrentUserUidLocalStorage(action.user.uid);
       return { ...action.user };
     case LOGOUT_USER:
+      setCurrentUserUidLocalStorage('');
       return null;
     default:
       return state;

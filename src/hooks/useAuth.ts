@@ -1,3 +1,4 @@
+import { loadingEnd, loadingStart } from './../modules/loading';
 import { onAuthStateChanged } from 'firebase/auth';
 import { CurrentUser, loginUser, logoutUser } from './../modules/currentUser';
 import { RootState } from './../modules/index';
@@ -7,44 +8,47 @@ import { logoIn, logoOut } from '../api/login';
 import { useLocation, useNavigate } from 'react-router';
 import { auth } from '../api/firebase';
 import { MEMBER_MENUS } from '../constants/menuList';
+import { sleep } from '../util/loading';
 
 export default function useAuth(): {
   currentUser: CurrentUser;
   loading: boolean;
+  pathname: string;
   handleLogin: (email: string, password: string) => void;
   handleLogout: () => void;
 } {
-  const currentUser = useSelector((state: RootState) => state.currentUser);
-
-  const [loading, setLoading] = useState<boolean>(true);
+  const { currentUser, loading } = useSelector((state: RootState) => {
+    return { currentUser: state.currentUser, loading: state.loading };
+  });
   const dispatch = useDispatch();
 
   let navigate = useNavigate();
-  let location = useLocation();
+  let { pathname } = useLocation();
 
   useEffect(() => {
-    const unSub = onAuthStateChanged(auth, (user: CurrentUser) => {
-      if (user) {
-        dispatch(loginUser(user));
-        if (location.pathname === '/') navigate('/dashboard', { replace: true });
-        else navigate(location.pathname, { replace: true });
-      }
-    });
+    // if (currentUser) lazyLoading();
+    // else handleGuestPath();
 
-    return unSub;
-  }, []);
-
-  useEffect(() => {
-    if (!currentUser) {
-      setTimeout(() => {
-        setLoading(false);
-      }, 700);
-      return;
-    }
+    if (!currentUser) handleGuestPath();
   }, [currentUser]);
 
+  function lazyLoading() {
+    sleep(() => dispatch(loadingEnd()), 700);
+  }
+
+  const guestAccessToLoginMenu = () => {
+    return MEMBER_MENUS.find(({ path }) => '/' + path === pathname);
+  };
+
+  const handleGuestPath = () => {
+    dispatch(loadingEnd());
+    if (guestAccessToLoginMenu()) {
+      return navigate('/login', { replace: true });
+    }
+  };
+
   const handleLogin = async (email: string, password: string) => {
-    setLoading(true);
+    dispatch(loadingStart());
     try {
       const UserImpl = await logoIn(email, password);
       dispatch(loginUser(UserImpl.user));
@@ -52,19 +56,19 @@ export default function useAuth(): {
     } catch {
       alert('로그인 에러 발생!!');
     }
-    setLoading(false);
+    dispatch(loadingEnd());
   };
 
   const handleLogout = async () => {
-    setLoading(true);
+    dispatch(loadingStart());
     try {
       await logoOut();
       dispatch(logoutUser());
     } catch {
       alert('로그아웃 에러 발생!!');
     }
-    setLoading(false);
+    dispatch(loadingEnd());
   };
 
-  return { currentUser, loading, handleLogin, handleLogout };
+  return { currentUser, loading, pathname, handleLogin, handleLogout };
 }
