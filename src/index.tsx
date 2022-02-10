@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import rootReducer from './modules';
 import { loginUser, logoutUser } from './modules/currentUser';
 import { auth } from './api/firebase';
@@ -15,7 +15,11 @@ import { loadingEnd } from './modules/loading';
 import { sleep } from './util/loading';
 import { getCurrentUserUidLocalStorage } from './util/storage';
 
-const store = createStore(rootReducer);
+import logger from 'redux-logger';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import ReduxThunk from 'redux-thunk';
+
+const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(ReduxThunk, logger)));
 
 function lazyLoading() {
   sleep(() => {

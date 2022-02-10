@@ -9,7 +9,19 @@ const LOGOUT_USER = 'currentUser/LOGOUT_USER' as const;
 export const loginUser = (user: User) => ({ type: LOGIN_USER, user });
 export const logoutUser = () => ({ type: LOGOUT_USER });
 
-type CurrentUserAction = ReturnType<typeof loginUser> | ReturnType<typeof logoutUser>;
+export const loginUserThunk =
+  (user: User): any =>
+  (dispatch: any) => {
+    setCurrentUserUidLocalStorage(user.uid);
+    dispatch({ type: LOGIN_USER, user });
+  };
+
+export const logoutUserThunk = (): any => (dispatch: any) => {
+  setCurrentUserUidLocalStorage('');
+  dispatch({ type: LOGOUT_USER });
+};
+
+type CurrentUserAction = ReturnType<typeof loginUserThunk> | ReturnType<typeof logoutUser>;
 
 const initialState = null;
 
@@ -17,10 +29,8 @@ const initialState = null;
 export default function currentUser(state: CurrentUser = initialState, action: CurrentUserAction) {
   switch (action.type) {
     case LOGIN_USER:
-      setCurrentUserUidLocalStorage(action.user.uid);
       return { ...action.user };
     case LOGOUT_USER:
-      setCurrentUserUidLocalStorage('');
       return null;
     default:
       return state;

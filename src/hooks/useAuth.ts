@@ -1,14 +1,11 @@
 import { loadingEnd, loadingStart } from './../modules/loading';
-import { onAuthStateChanged } from 'firebase/auth';
-import { CurrentUser, loginUser, logoutUser } from './../modules/currentUser';
+import { CurrentUser, loginUserThunk, logoutUserThunk } from './../modules/currentUser';
 import { RootState } from './../modules/index';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoIn, logoOut } from '../api/login';
 import { useLocation, useNavigate } from 'react-router';
-import { auth } from '../api/firebase';
 import { MEMBER_MENUS } from '../constants/menuList';
-import { sleep } from '../util/loading';
 
 export default function useAuth(): {
   currentUser: CurrentUser;
@@ -26,15 +23,8 @@ export default function useAuth(): {
   let { pathname } = useLocation();
 
   useEffect(() => {
-    // if (currentUser) lazyLoading();
-    // else handleGuestPath();
-
     if (!currentUser) handleGuestPath();
   }, [currentUser]);
-
-  function lazyLoading() {
-    sleep(() => dispatch(loadingEnd()), 700);
-  }
 
   const guestAccessToLoginMenu = () => {
     return MEMBER_MENUS.find(({ path }) => '/' + path === pathname);
@@ -51,7 +41,7 @@ export default function useAuth(): {
     dispatch(loadingStart());
     try {
       const UserImpl = await logoIn(email, password);
-      dispatch(loginUser(UserImpl.user));
+      dispatch(loginUserThunk(UserImpl.user));
       navigate('/dashboard');
     } catch {
       alert('로그인 에러 발생!!');
@@ -63,7 +53,7 @@ export default function useAuth(): {
     dispatch(loadingStart());
     try {
       await logoOut();
-      dispatch(logoutUser());
+      dispatch(logoutUserThunk());
     } catch {
       alert('로그아웃 에러 발생!!');
     }
