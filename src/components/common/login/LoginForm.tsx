@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { User } from 'firebase/auth';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { Stack, Box, CardMedia, Button, Typography, IconButton } from '@mui/material';
 import { styled } from '@mui/system';
@@ -10,10 +9,7 @@ import EmailInput from '../form/EmailInput';
 import PasswordInputProps from '../form/PasswordInput';
 import Loading from '../Loading';
 
-import { logoIn, logoOut, useAuth } from '../../../api/firebase';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../modules';
-import { loginUser, logoutUser } from '../../../modules/currentUser';
+import useAuth from '../../../hooks/useAuth';
 
 const MainContainer = styled('main')(({ theme }) => ({
   display: 'flex',
@@ -42,52 +38,13 @@ const BackgroundBox = styled('div')(({ theme }) => ({
   },
 }));
 
-interface LoginFormProps {
-  // currentUser: User | null;
-  // loading: boolean;
-  // setLoading: (value: boolean) => void;
-}
-// { currentUser, loading, setLoading }: LoginFormProps}
+interface LoginFormProps {}
+
 function LoginForm() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [loading, setLoading] = React.useState(false);
-  // const [currentUser, loading, setLoading] = useAuth();
 
-  const currentUser: User = useSelector((state: RootState) => state.currentUser as User);
-  const dispatch = useDispatch();
-
-  let navigate = useNavigate();
-
-  // React.useEffect(() => {
-  //   if (currentUser) navigate('/dashboard');
-  // }, [currentUser]);
-
-  const handleLogin = async () => {
-    if (email && password) {
-      setLoading(true);
-      try {
-        const UserImpl = await logoIn(email, password);
-        dispatch(loginUser(UserImpl.user));
-        setLoading(false);
-        navigate('/dashboard');
-      } catch {
-        alert('Error!!!');
-      }
-      setLoading(false);
-    }
-  };
-
-  const handleLogout = async () => {
-    setLoading(true);
-    try {
-      await logoOut();
-      dispatch(logoutUser());
-    } catch {
-      alert('로그아웃 에러 발생!!');
-    }
-    setLoading(false);
-  };
+  const { currentUser, loading, handleLogin, handleLogout } = useAuth();
 
   return (
     <MainContainer>
@@ -184,7 +141,7 @@ function LoginForm() {
                     type="submit"
                     onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                       e.preventDefault();
-                      currentUser ? handleLogout() : handleLogin();
+                      currentUser ? handleLogout() : handleLogin(email, password);
                     }}
                   >
                     {currentUser ? 'LOGOUT' : 'LOGIN'}
